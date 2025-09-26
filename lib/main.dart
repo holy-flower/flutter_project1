@@ -36,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -44,12 +45,16 @@ class _MyHomePageState extends State<MyHomePage> {
               'Продольнова Жанна Сергеевна',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+
             SizedBox(height: 20),
+
             Text(
               'ИКБО-11-22',
               style: TextStyle(fontSize: 18),
             ),
+
             SizedBox(height: 20),
+
             Text(
               '22И0394',
               style: TextStyle(fontSize: 18),
