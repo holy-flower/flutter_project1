@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/facial_care_screen.dart';
 
 void main() {
   runApp(const CosmetologyApp());
@@ -30,6 +31,11 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentScreenIndex = 0;
 
+  final List<Widget> _screens = [
+    const FacialCareScreen()
+  ];
+
+
   final List<String> _screenTitles = [
     'Уход за лицом',
     'Уход за телом',
@@ -52,6 +58,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         backgroundColor: Colors.pink[100],
         elevation: 2,
       ),
+      body: _screens[_currentScreenIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentScreenIndex,
         onTap: _onItemTapped,
