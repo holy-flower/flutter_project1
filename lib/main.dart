@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       body: Center(
-        child: Row (
+        child: Column (
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
@@ -53,19 +53,15 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(fontSize: 18),
             ),
 
-            SizedBox(height: 20),
+            SizedBox(
+              height: 100,
+              width: 50,
+            ),
 
             Text(
               '22И0394',
               style: TextStyle(fontSize: 18),
             ),
-            ElevatedButton(onPressed: null, child: const Text("Кнопка"),
-            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.cyan),
-            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
-            ),
-              fixedSize: MaterialStateProperty.all(Size(200, 50))
-            )
-            )
           ],
         ),
       ),
