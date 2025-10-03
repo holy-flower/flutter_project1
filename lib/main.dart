@@ -41,27 +41,25 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column (
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Продольнова Жанна Сергеевна',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+            const Padding(padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Продольнова Жанна Сергеевна\n ИКБО-11-22 \n 22И0394',
+                style: TextStyle(fontSize: 20, color: Colors.blue),
+              )
             ),
 
-            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: null,
+              child: const Text("Кнопка"),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.cyan),
+                shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                ),
+                fixedSize: MaterialStateProperty.all(Size(200, 50)),
+              ),
+            )
 
-            Text(
-              'ИКБО-11-22',
-              style: TextStyle(fontSize: 18),
-            ),
-
-            SizedBox(
-              height: 100,
-              width: 50,
-            ),
-
-            Text(
-              '22И0394',
-              style: TextStyle(fontSize: 18),
-            ),
           ],
         ),
       ),
