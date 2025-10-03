@@ -10,64 +10,36 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      home: Scaffold(
+        body: Center(
+          child: MySimpleWidget(),
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+class MySimpleWidget extends StatefulWidget {
+  const MySimpleWidget({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MySimpleWidget> createState() => _MySimpleWidgetState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MySimpleWidgetState extends State<MySimpleWidget> {
+  String _text = 'Нажми меня';
+
+  void _changeText() {
+    setState(() {
+      _text = 'Молодец';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-
-      body: Center(
-        child: Column (
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-                padding: EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: Colors.greenAccent,
-                borderRadius: BorderRadius.circular(50)
-              ),
-              child: Text(
-                'Продольнова Жанна Сергеевна\n ИКБО-11-22 \n 22И0394',
-                style: TextStyle(fontSize: 20, color: Colors.blue),
-              )
-            ),
-
-            ElevatedButton(
-              onPressed: null,
-              child: const Text("Кнопка"),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.cyan),
-                shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
-                ),
-                fixedSize: MaterialStateProperty.all(Size(200, 50)),
-              ),
-            )
-
-          ],
-        ),
-      ),
+    return ElevatedButton(
+      onPressed: _changeText,
+      child: Text(_text),
     );
   }
 }
