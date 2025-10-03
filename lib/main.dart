@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/facial_care_screen.dart';
+import 'screens/body_care_screen.dart';
 
 void main() {
   runApp(const CosmetologyApp());
@@ -32,7 +33,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentScreenIndex = 0;
 
   final List<Widget> _screens = [
-    const FacialCareScreen()
+    const FacialCareScreen(),
+    const BodyCareScreen()
   ];
 
 
