@@ -41,7 +41,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column (
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Padding(padding: EdgeInsets.all(8.0),
+            Container(
+                padding: EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: Colors.greenAccent,
+                borderRadius: BorderRadius.circular(50)
+              ),
               child: Text(
                 'Продольнова Жанна Сергеевна\n ИКБО-11-22 \n 22И0394',
                 style: TextStyle(fontSize: 20, color: Colors.blue),
