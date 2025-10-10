@@ -70,7 +70,7 @@ class _FacialCareScreenState extends State<FacialCareScreen> {
           children: [
             const SizedBox(height: 20),
             Expanded(
-              child: ListView(
+              child: Column (
                 children: [
                   ..._services.asMap().entries.map((entry) {
                     final index = entry.key;
