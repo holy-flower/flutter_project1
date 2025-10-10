@@ -10,7 +10,7 @@ class MassageScreen extends StatefulWidget {
 class _MassageScreenState extends State<MassageScreen> {
   int _selectedMassage = -1;
 
-  final List<Map<String, dynamic>> _massages = [
+  List<Map<String, dynamic>> _massages = [
     {
       'title': 'Классический массаж',
       'duration': '60 мин',
@@ -59,10 +59,41 @@ class _MassageScreenState extends State<MassageScreen> {
     });
   }
 
+  void _deleteMassage(int index) {
+    setState(() {
+      _massages.removeAt(index);
+      if (_selectedMassage == index) {
+        _selectedMassage = -1;
+      } else if (_selectedMassage > index) {
+        _selectedMassage--;
+      }
+    });
+  }
+
+  void _addMassage() {
+    setState(() {
+      _massages.add({
+        'title': 'Новый массаж',
+        'duration': '60 мин',
+        'price': '2500 ₽',
+        'description': 'Описание нового вида массажа',
+        'indication': 'Общее расслабление, восстановление',
+        'details': 'Подробное описание нового вида массажа будет добавлено позже.',
+        'techniques': ['Техника 1', 'Техника 2', 'Техника 3'],
+        'benefits': ['Преимущество 1', 'Преимущество 2', 'Преимущество 3'],
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green[50],
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addMassage,
+        backgroundColor: Colors.green[400],
+        child: Icon(Icons.add, color: Colors.white),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -110,154 +141,179 @@ class _MassageScreenState extends State<MassageScreen> {
         required bool isExpanded,
       }) {
     return Card(
+      key: ValueKey(title),
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 0,
-      child: GestureDetector(
-        onTap: () => _selectMassage(index),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: () => _selectMassage(index),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.green[100],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      price,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Длительность: $duration',
-                style: TextStyle(color: Colors.grey[600]),
-              ),
-              const SizedBox(height: 8),
-              Text(description),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.green[50],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.medical_services,
-                      size: 16,
-                      color: Colors.green[600],
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Показания: $indication',
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        title,
                         style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.green[800],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
                       ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.green[100],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          price,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Длительность: $duration',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(description),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.green[50],
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ],
-                ),
-              ),
-
-              if (isExpanded) ...[
-                const SizedBox(height: 16),
-                Container(
-                  width: double.infinity,
-                  height: 1,
-                  color: Colors.grey[300],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Подробное описание:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green[700],
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  details,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    height: 1.4,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Используемые техники:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green[700],
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 4,
-                  children: techniques.map((technique) => Chip(
-                    label: Text(
-                      technique,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    backgroundColor: Colors.green[100],
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  )).toList(),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Преимущества:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green[700],
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Column(
-                  children: benefits.map((benefit) => Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
                     child: Row(
                       children: [
                         Icon(
-                          Icons.check_circle,
-                          color: Colors.green[400],
+                          Icons.medical_services,
                           size: 16,
+                          color: Colors.green[600],
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          benefit,
-                          style: const TextStyle(fontSize: 14),
+                        Expanded(
+                          child: Text(
+                            'Показания: $indication',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.green[800],
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  )).toList(),
-                ),
-              ],
-            ],
+                  ),
+
+                  if (isExpanded) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      width: double.infinity,
+                      height: 1,
+                      color: Colors.grey[300],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Подробное описание:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green[700],
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      details,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Используемые техники:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green[700],
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: techniques.map((technique) => Chip(
+                        label: Text(
+                          technique,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        backgroundColor: Colors.green[100],
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      )).toList(),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Преимущества:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green[700],
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Column(
+                      children: benefits.map((benefit) => Padding(
+                        padding: const EdgeInsets.only(bottom: 4.0),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.check_circle,
+                              color: Colors.green[400],
+                              size: 16,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              benefit,
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      )).toList(),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
-        ),
+
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: GestureDetector(
+              onTap: () => _deleteMassage(index),
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.red[100],
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Icon(
+                  Icons.delete_outline,
+                  color: Colors.red[700],
+                  size: 18,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

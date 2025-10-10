@@ -70,10 +70,28 @@ class _FacialCareScreenState extends State<FacialCareScreen> {
     });
   }
 
+  void _addService() {
+    setState(() {
+      _services.add({
+        'title': 'Новая услуга',
+        'duration': '30 мин',
+        'price': '1000 ₽',
+        'description': 'Описание новой услуги',
+        'details': 'Подробное описание новой услуги будет добавлено позже.',
+        'effects': ['Эффект 1', 'Эффект 2', 'Эффект 3'],
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.pink[50],
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addService,
+        backgroundColor: Colors.pink[100],
+        child: Icon(Icons.add, color: Colors.white),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -81,10 +99,10 @@ class _FacialCareScreenState extends State<FacialCareScreen> {
           children: [
             const SizedBox(height: 20),
             Expanded(
-                child: ListView.separated (
+                child: ListView.separated(
                     itemCount: _services.length,
-                    separatorBuilder: (context, index) => Container(height: 3, color: Colors.purpleAccent),
-                    itemBuilder: (context, index){
+                    separatorBuilder: (context, index) => Container(height: 3, color: Colors.purpleAccent[100]),
+                    itemBuilder: (context, index) {
                       final service = _services[index];
                       return _buildServiceCard(
                         service['title'],
