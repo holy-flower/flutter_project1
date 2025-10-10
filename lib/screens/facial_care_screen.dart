@@ -70,24 +70,26 @@ class _FacialCareScreenState extends State<FacialCareScreen> {
           children: [
             const SizedBox(height: 20),
             Expanded(
-              child: Column (
-                children: [
-                  ..._services.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final service = entry.value;
-                    return _buildServiceCard(
-                      service['title'],
-                      service['duration'],
-                      service['price'],
-                      service['description'],
-                      service['details'],
-                      service['effects'],
-                      index,
-                      isExpanded: _selectedService == index,
-                    );
-                  }),
-                ],
-              ),
+              child: SingleChildScrollView(
+                child: Column (
+                  children: [
+                    ..._services.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final service = entry.value;
+                      return _buildServiceCard(
+                        service['title'],
+                        service['duration'],
+                        service['price'],
+                        service['description'],
+                        service['details'],
+                        service['effects'],
+                        index,
+                        isExpanded: _selectedService == index,
+                      );
+                    }),
+                  ],
+                ),
+              )
             ),
           ],
         ),
