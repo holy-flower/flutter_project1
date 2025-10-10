@@ -70,9 +70,10 @@ class _FacialCareScreenState extends State<FacialCareScreen> {
           children: [
             const SizedBox(height: 20),
             Expanded(
-              child: ListView.builder(
+              child: ListView.separated (
                 itemCount: _services.length,
-                itemBuilder: (context, index) {
+                separatorBuilder: (context, index) => Container(height: 3, color: Colors.purpleAccent),
+                itemBuilder: (context, index){
                   final service = _services[index];
                   return _buildServiceCard(
                     service['title'],
