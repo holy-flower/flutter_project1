@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'features/facial_care/facial_care_feature.dart' as facial_care;
 import 'features/body_care/body_care_feature.dart' as body_care;
 import 'features/hair_removal/hair_removal_feature.dart' as hair_removal;
-import 'features/massage/massage_screen.dart';
+import 'features/massage/massage_feature.dart' as massage;
 import 'features/spa/spa_screen.dart';
 
 void main() {
@@ -39,7 +39,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const facial_care.FacialCareContainer(),
     const body_care.BodyCareContainer(),
     const hair_removal.HairRemovalContainer(),
-    const MassageScreen(),
+    const massage.MassageContainer(),
     const SPAScreen()
   ];
 
