@@ -3,7 +3,7 @@ import 'features/facial_care/facial_care_feature.dart' as facial_care;
 import 'features/body_care/body_care_feature.dart' as body_care;
 import 'features/hair_removal/hair_removal_feature.dart' as hair_removal;
 import 'features/massage/massage_feature.dart' as massage;
-import 'features/spa/spa_screen.dart';
+import 'features/spa/spa_feature.dart' as spa;
 
 void main() {
   runApp(const CosmetologyApp());
@@ -40,7 +40,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const body_care.BodyCareContainer(),
     const hair_removal.HairRemovalContainer(),
     const massage.MassageContainer(),
-    const SPAScreen()
+    const spa.SpaContainer()
   ];
 
 
