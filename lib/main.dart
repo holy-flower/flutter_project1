@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'features/facial_care/facial_care_screen.dart';
-import 'features/body_care/body_care_screen.dart';
+import 'features/body_care/body_care_feature.dart' as body_care;
 import 'features/hair_removal/hair_removal_screen.dart';
 import 'features/massage/massage_screen.dart';
 import 'features/spa/spa_screen.dart';
@@ -37,7 +37,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   final List<Widget> _screens = [
     const FacialCareScreen(),
-    const BodyCareScreen(),
+    const body_care.BodyCareContainer(),
     const HairRemovalScreen(),
     const MassageScreen(),
     const SPAScreen()
