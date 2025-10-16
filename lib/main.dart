@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'screens/facial_care_screen.dart';
-import 'screens/body_care_screen.dart';
-import 'screens/hair_removal_screen.dart';
-import 'screens/massage_screen.dart';
-import 'screens/spa_screen.dart';
+import 'features/facial_care/facial_care_screen.dart';
+import 'features/body_care/body_care_screen.dart';
+import 'features/hair_removal/hair_removal_screen.dart';
+import 'features/massage/massage_screen.dart';
+import 'features/spa/spa_screen.dart';
 
 void main() {
   runApp(const CosmetologyApp());
