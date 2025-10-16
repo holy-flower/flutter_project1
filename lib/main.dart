@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'features/facial_care/facial_care_feature.dart' as facial_care;
 import 'features/body_care/body_care_feature.dart' as body_care;
-import 'features/hair_removal/hair_removal_screen.dart';
+import 'features/hair_removal/hair_removal_feature.dart' as hair_removal;
 import 'features/massage/massage_screen.dart';
 import 'features/spa/spa_screen.dart';
 
@@ -15,7 +15,7 @@ class CosmetologyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Салон Красоты "BeauiClinic"',
+      title: 'Салон Красоты "BeautyClinic"',
       theme: ThemeData(
         primarySwatch: Colors.pink,
         fontFamily: 'Roboto',
@@ -38,7 +38,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = [
     const facial_care.FacialCareContainer(),
     const body_care.BodyCareContainer(),
-    const HairRemovalScreen(),
+    const hair_removal.HairRemovalContainer(),
     const MassageScreen(),
     const SPAScreen()
   ];
