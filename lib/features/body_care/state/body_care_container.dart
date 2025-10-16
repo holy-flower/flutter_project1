@@ -101,7 +101,6 @@ class _BodyCareContainerState extends State<BodyCareContainer> {
   }
 
   void _deleteService(int index) {
-    // Сохраняем удаляемую услугу перед удалением
     final removedService = _services[index];
     final removedIndex = index;
 
@@ -114,7 +113,6 @@ class _BodyCareContainerState extends State<BodyCareContainer> {
       }
     });
 
-    // Показываем уведомление об удалении с возможностью отмены
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Услуга "${removedService.title}" удалена'),
@@ -122,9 +120,7 @@ class _BodyCareContainerState extends State<BodyCareContainer> {
           label: 'Отменить',
           onPressed: () {
             setState(() {
-              // Восстанавливаем исходную удаленную услугу
               _services.insert(removedIndex, removedService);
-              // Восстанавливаем выделение если нужно
               if (_selectedService >= removedIndex) {
                 _selectedService++;
               }
