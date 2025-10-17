@@ -43,7 +43,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const spa.SpaContainer()
   ];
 
-
   final List<String> _screenTitles = [
     'Уход за лицом',
     'Уход за телом',
