@@ -68,7 +68,7 @@ class ServiceSelector extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (services.length > 1) // Не показывать кнопку удаления, если услуга последняя
+                  if (services.length > 1)
                     Positioned(
                       top: 0,
                       right: 0,

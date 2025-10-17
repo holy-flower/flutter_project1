@@ -87,7 +87,7 @@ class _HairRemovalContainerState extends State<HairRemovalContainer> {
   }
 
   void _deleteService(int index) {
-    if (_services.length <= 1) return; // Не удаляем последнюю услугу
+    if (_services.length <= 1) return;
 
     final removedService = _services[index];
 

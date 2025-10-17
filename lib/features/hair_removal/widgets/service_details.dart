@@ -124,7 +124,7 @@ class ServiceDetails extends StatelessWidget {
       case 'Лазерная эпиляция':
         return '6-12 месяцев';
       case 'Электроэпиляция':
-        return '永久ный';
+        return '2-3 месяца';
       case 'Фотоэпиляция':
         return '4-8 месяцев';
       default:
