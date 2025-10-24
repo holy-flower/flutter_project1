@@ -33,11 +33,11 @@ class FacialCareScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
             CachedNetworkImage(
-              imageUrl: _url,
+              imageUrl: 'https://100kupon.ru/assets/images/products/6436/uploads-zlavadna-sk-deal-images-2020-0821-5f3fb6950da6b.jpg',
               height: 150,
               width: double.infinity,
+              fit: BoxFit.cover,
               progressIndicatorBuilder: (context, url, progress) =>
                 const CircularProgressIndicator(),
               errorWidget: (context, url, error) => const Center(
