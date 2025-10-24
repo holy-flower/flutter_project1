@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/facial_service.dart';
 import '../widgets/facial_service_list.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class FacialCareScreen extends StatelessWidget {
   final List<FacialService> services;
@@ -32,6 +33,20 @@ class FacialCareScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
+            CachedNetworkImage(
+              imageUrl: _url,
+              height: 150,
+              width: double.infinity,
+              progressIndicatorBuilder: (context, url, progress) =>
+                const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => const Center(
+                child: Icon(
+                  Icons.error,
+                  color: Colors.red,
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             Expanded(
               child: FacialServiceList(
