@@ -80,22 +80,11 @@ class SpaScreen extends StatelessWidget {
   }
 }
 
-class SecondPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Page"),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Going back to HomePage
-            Navigator.pop(context);
-          },
-          child: Text("Go Back"),
-        ),
-      ),
-    );
-  }
+void _completeLogin() {
+  Navigator.pushReplacement<void, void>(
+    context,
+    MaterialPageRoute<void>(
+      builder: (BuildContext context) => const MyHomePage(),
+    ),
+  );
 }
