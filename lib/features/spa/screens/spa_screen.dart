@@ -13,15 +13,6 @@ class SpaScreen extends StatelessWidget {
   final VoidCallback onAddProgram;
   final VoidCallback onBookProgram;
 
-  void _openMyPage() {
-    Navigator.push<void>(
-      context,
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => const MyPage(),
-      ),
-    );
-  }
-
   const SpaScreen({
     super.key,
     required this.programs,
@@ -83,6 +74,26 @@ class SpaScreen extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Second Page"),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Going back to HomePage
+            Navigator.pop(context);
+          },
+          child: Text("Go Back"),
         ),
       ),
     );
