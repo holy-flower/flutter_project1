@@ -13,6 +13,15 @@ class SpaScreen extends StatelessWidget {
   final VoidCallback onAddProgram;
   final VoidCallback onBookProgram;
 
+  void _openMyPage() {
+    Navigator.push<void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => const MyPage(),
+      ),
+    );
+  }
+
   const SpaScreen({
     super.key,
     required this.programs,
