@@ -7,6 +7,8 @@ import 'features/body_care/screens/add_body_service_screen.dart';
 import 'features/facial_care/facial_care_feature.dart' as facial_care;
 import 'features/body_care/body_care_feature.dart' as body_care;
 import 'features/hair_removal/hair_removal_feature.dart' as hair_removal;
+import 'features/hair_removal/models/hair_removal_service.dart';
+import 'features/hair_removal/screens/add_hair_removal_service_screen.dart';
 import 'features/massage/massage_feature.dart' as massage;
 import 'features/spa/spa_feature.dart' as spa;
 
@@ -88,6 +90,15 @@ final GoRouter _router = GoRouter(
             final Function(BodyService) onServiceAdded = state.extra as Function(BodyService);
             return MaterialPage(
               child: AddBodyServiceScreen(onServiceAdded: onServiceAdded),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/hair_removal/add',
+          pageBuilder: (context, state) {
+            final Function(HairRemovalService) onServiceAdded = state.extra as Function(HairRemovalService);
+            return MaterialPage(
+              child: AddHairRemovalServiceScreen(onServiceAdded: onServiceAdded),
             );
           },
         ),
