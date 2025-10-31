@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../models/body_service.dart';
 import '../screens/body_care_screen.dart';
 import '../screens/add_body_service_screen.dart';
@@ -134,14 +135,7 @@ class _BodyCareContainerState extends State<BodyCareContainer> {
   }
 
   void _navigateAddToService() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => AddBodyServiceScreen(
-                onServiceAdded: _addService,
-            )
-        )
-    );
+    context.push('/body_care/add', extra: _addService);
   }
 
   void _addService(BodyService newService) {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project1/features/facial_care/models/facial_service.dart';
 import 'package:flutter_project1/features/facial_care/screens/add_facial_service_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'features/body_care/models/body_service.dart';
+import 'features/body_care/screens/add_body_service_screen.dart';
 import 'features/facial_care/facial_care_feature.dart' as facial_care;
 import 'features/body_care/body_care_feature.dart' as body_care;
 import 'features/hair_removal/hair_removal_feature.dart' as hair_removal;
@@ -79,6 +81,15 @@ final GoRouter _router = GoRouter(
                 child: AddFacialServiceScreen(onServiceAdded: onServiceAdded),
             );
           }
+        ),
+        GoRoute(
+          path: '/body_care/add',
+          pageBuilder: (context, state) {
+            final Function(BodyService) onServiceAdded = state.extra as Function(BodyService);
+            return MaterialPage(
+              child: AddBodyServiceScreen(onServiceAdded: onServiceAdded),
+            );
+          },
         ),
       ],
     ),
