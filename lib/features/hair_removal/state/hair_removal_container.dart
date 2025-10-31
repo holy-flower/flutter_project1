@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/hair_removal_service.dart';
 import '../screens/hair_removal_screen.dart';
+import '../screens/add_hair_removal_service_screen.dart';
 
 class HairRemovalContainer extends StatefulWidget {
   const HairRemovalContainer({super.key});
@@ -65,23 +66,26 @@ class _HairRemovalContainerState extends State<HairRemovalContainer> {
     });
   }
 
-  void _addService() {
+  void _navigateToAddService() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddHairRemovalServiceScreen(
+                onServiceAdded: _addService,
+            )
+        )
+    );
+  }
+
+  void _addService(HairRemovalService newService) {
     setState(() {
-      _services.add(HairRemovalService(
-        id: DateTime.now().microsecondsSinceEpoch.toString(),
-        name: 'Новый метод',
-        price: 'от 1500 ₽',
-        time: '30-60 мин',
-        description: 'Описание нового метода депиляции',
-        color: Colors.grey,
-        zones: ['Новая зона 1', 'Новая зона 2'],
-      ));
+      _services.add(newService);
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Новый метод депиляции добавлен'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text('Метод "${newService.name}" добавлен'),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -121,7 +125,7 @@ class _HairRemovalContainerState extends State<HairRemovalContainer> {
       services: _services,
       selectedService: _selectedService,
       onSelectService: _selectService,
-      onAddService: _addService,
+      onAddService: _navigateToAddService,
       onDeleteService: _deleteService,
     );
   }
