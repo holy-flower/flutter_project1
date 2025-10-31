@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project1/features/facial_care/screens/add_facial_service_screen.dart';
+import 'package:go_router/go_router.dart';
 import '../models/facial_service.dart';
 import '../screens/facial_care_screen.dart';
 
@@ -99,14 +100,7 @@ class _FacialCareContainerState extends State<FacialCareContainer> {
   }
 
   void _navigateToAddService() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => AddFacialServiceScreen(
-                onServiceAdded: _addService,
-            )
-        )
-    );
+    context.push('/facial_care/add', extra: _addService);
   }
 
   void _addService(FacialService newService) {

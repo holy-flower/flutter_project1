@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project1/features/facial_care/models/facial_service.dart';
+import 'package:flutter_project1/features/facial_care/screens/add_facial_service_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'features/facial_care/facial_care_feature.dart' as facial_care;
 import 'features/body_care/body_care_feature.dart' as body_care;
@@ -68,6 +70,15 @@ final GoRouter _router = GoRouter(
           pageBuilder: (context, state) => NoTransitionPage(
             child: const spa.SpaContainer(),
           ),
+        ),
+        GoRoute(
+          path: '/facial_care/add',
+          pageBuilder: (context, state) {
+            final Function(FacialService) onServiceAdded = state.extra as Function(FacialService);
+            return MaterialPage(
+                child: AddFacialServiceScreen(onServiceAdded: onServiceAdded),
+            );
+          }
         ),
       ],
     ),
