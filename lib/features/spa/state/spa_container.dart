@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/spa_service.dart';
 import '../screens/spa_screen.dart';
+import '../screens/add_spa_service_screen.dart';
 
 class SpaContainer extends StatefulWidget {
   const SpaContainer({super.key});
@@ -124,27 +125,26 @@ class _SpaContainerState extends State<SpaContainer> {
     );
   }
 
-  void _addProgram() {
+  void _navigateToAddProgram() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddSpaServiceScreen(
+                onSpaServiceAdded: _addProgram,
+            )
+        )
+    );
+  }
+
+  void _addProgram(SpaService newProgram) {
     setState(() {
-      _programs.add(SpaService(
-        id: DateTime.now().microsecondsSinceEpoch.toString(),
-        title: 'Новая SPA программа',
-        duration: '120 мин',
-        price: '7000 ₽',
-        description: 'Описание новой SPA программы',
-        includes: [
-          'Услуга 1',
-          'Услуга 2',
-          'Услуга 3',
-        ],
-        color: Colors.purple,
-      ));
+      _programs.add(newProgram);
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Новая SPA программа добавлена'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text('SPA программа "${newProgram.title}" добавлена'),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -166,7 +166,7 @@ class _SpaContainerState extends State<SpaContainer> {
       selectedProgram: _selectedProgram,
       onSelectProgram: _selectProgram,
       onDeleteProgram: _deleteProgram,
-      onAddProgram: _addProgram,
+      onAddProgram: _navigateToAddProgram,
       onBookProgram: _bookProgram,
     );
   }

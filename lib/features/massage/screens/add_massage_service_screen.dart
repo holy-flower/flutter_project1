@@ -52,7 +52,7 @@ class _AddMassageServiceScreenState extends State<AddMassageServiceScreen> {
       );
 
       widget.onMassageAdded(newMassage);
-      Navigator.pop(context); // Вертикальный возврат назад
+      Navigator.pop(context);
     }
   }
 
