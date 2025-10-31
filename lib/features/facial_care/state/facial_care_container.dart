@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project1/features/facial_care/screens/add_facial_service_screen.dart';
 import '../models/facial_service.dart';
 import '../screens/facial_care_screen.dart';
 
@@ -97,23 +98,26 @@ class _FacialCareContainerState extends State<FacialCareContainer> {
     );
   }
 
-  void _addService() {
+  void _navigateToAddService() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddFacialServiceScreen(
+                onServiceAdded: _addService,
+            )
+        )
+    );
+  }
+
+  void _addService(FacialService newService) {
     setState(() {
-      _services.add(FacialService(
-        id: DateTime.now().microsecondsSinceEpoch.toString(),
-        title: 'Новая услуга',
-        duration: '30 мин',
-        price: '1000 ₽',
-        description: 'Описание новой услуги',
-        details: 'Подробное описание новой услуги будет добавлено позже.',
-        effects: ['Эффект 1', 'Эффект 2', 'Эффект 3'],
-      ));
+      _services.add(newService);
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Новая услуга добавлена'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text('Услуга "${newService.title}" добавлена'),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -125,7 +129,7 @@ class _FacialCareContainerState extends State<FacialCareContainer> {
       selectedService: _selectedService,
       onSelectService: _selectService,
       onDeleteService: _deleteService,
-      onAddService: _addService,
+      onAddService: _navigateToAddService,
     );
   }
 }
