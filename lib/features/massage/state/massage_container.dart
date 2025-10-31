@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/massage_service.dart';
 import '../screens/massage_screen.dart';
+import '../screens/add_massage_service_screen.dart';
 
 class MassageContainer extends StatefulWidget {
   const MassageContainer({super.key});
@@ -107,25 +108,26 @@ class _MassageContainerState extends State<MassageContainer> {
     );
   }
 
-  void _addMassage() {
+  void _navigateToAddMassage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddMassageServiceScreen(
+                onMassageAdded: _addMassage,
+            )
+        )
+    );
+  }
+
+  void _addMassage(MassageService newMassage) {
     setState(() {
-      _massages.add(MassageService(
-        id: DateTime.now().microsecondsSinceEpoch.toString(),
-        title: 'Новый массаж',
-        duration: '60 мин',
-        price: '2500 ₽',
-        description: 'Описание нового вида массажа',
-        indication: 'Общее расслабление, восстановление',
-        details: 'Подробное описание нового вида массажа будет добавлено позже. Этот массаж сочетает в себе лучшие техники для достижения максимального эффекта.',
-        techniques: ['Техника 1', 'Техника 2', 'Техника 3'],
-        benefits: ['Преимущество 1', 'Преимущество 2', 'Преимущество 3'],
-      ));
+      _massages.add(newMassage);
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Новый массаж добавлен'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text('Массаж "${newMassage.title}" добавлен'),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -137,7 +139,7 @@ class _MassageContainerState extends State<MassageContainer> {
       selectedMassage: _selectedMassage,
       onSelectMassage: _selectMassage,
       onDeleteMassage: _deleteMassage,
-      onAddMassage: _addMassage,
+      onAddMassage: _navigateToAddMassage,
     );
   }
 }
