@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../models/spa_service.dart';
 import '../screens/spa_screen.dart';
 import '../screens/add_spa_service_screen.dart';
@@ -126,14 +127,7 @@ class _SpaContainerState extends State<SpaContainer> {
   }
 
   void _navigateToAddProgram() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => AddSpaServiceScreen(
-                onSpaServiceAdded: _addProgram,
-            )
-        )
-    );
+    context.push('/spa/add', extra: _addProgram);
   }
 
   void _addProgram(SpaService newProgram) {
