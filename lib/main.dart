@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'features/facial_care/facial_care_feature.dart' as facial_care;
 import 'features/body_care/body_care_feature.dart' as body_care;
 import 'features/hair_removal/hair_removal_feature.dart' as hair_removal;
@@ -15,83 +14,38 @@ class CosmetologyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp(
       title: 'Салон Красоты "BeautyClinic"',
       theme: ThemeData(
         primarySwatch: Colors.pink,
         fontFamily: 'Roboto',
       ),
-      routerConfig: _router,
+      home: const CustomMainNavigationScreen(initialIndex: 0),
     );
   }
 }
 
-final GoRouter _router = GoRouter(
-  routes: [
-    ShellRoute(
-      builder: (context, state, child) {
-        return MainNavigationScreen(child: child);
-      },
-      routes: [
-        GoRoute(
-          path: '/',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: facial_care.FacialCareContainer(),
-          ),
-        ),
-        GoRoute(
-          path: '/facial_care',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: facial_care.FacialCareContainer(),
-          ),
-        ),
-        GoRoute(
-          path: '/body_care',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: body_care.BodyCareContainer(),
-          ),
-        ),
-        GoRoute(
-          path: '/hair_removal',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: hair_removal.HairRemovalContainer(),
-          ),
-        ),
-        GoRoute(
-          path: '/massage',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: massage.MassageContainer(),
-          ),
-        ),
-        GoRoute(
-          path: '/spa',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: spa.SpaContainer(),
-          ),
-        ),
-      ],
-    ),
-  ],
-);
+class CustomMainNavigationScreen extends StatefulWidget {
+  final int initialIndex;
 
-class MainNavigationScreen extends StatefulWidget {
-  final Widget child;
-
-  const MainNavigationScreen({super.key, required this.child});
+  const CustomMainNavigationScreen({
+    super.key,
+    required this.initialIndex,
+  });
 
   @override
-  State<MainNavigationScreen> createState() => _MainNavigationScreenState();
+  State<CustomMainNavigationScreen> createState() => _CustomMainNavigationScreenState();
 }
 
-class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int _currentScreenIndex = 0;
+class _CustomMainNavigationScreenState extends State<CustomMainNavigationScreen> {
+  late int _currentScreenIndex;
 
-  final List<String> _routes = [
-    '/facial_care',
-    '/body_care',
-    '/hair_removal',
-    '/massage',
-    '/spa'
+  final List<Widget> _screens = [
+    const facial_care.FacialCareContainer(),
+    const body_care.BodyCareContainer(),
+    const hair_removal.HairRemovalContainer(),
+    const massage.MassageContainer(),
+    const spa.SpaContainer()
   ];
 
   final List<String> _screenTitles = [
@@ -102,37 +56,34 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     'SPA-программы',
   ];
 
-  int _getCurrentIndex(String location) {
-    for (int i = 0; i < _routes.length; i++) {
-      if (location == _routes[i] || location.endsWith(_routes[i])) {
-        return i;
-      }
-    }
-    return 0;
+  @override
+  void initState() {
+    super.initState();
+    _currentScreenIndex = widget.initialIndex;
   }
 
-  String _getScreenTitle(String location) {
-    final int index = _getCurrentIndex(location);
-    return _screenTitles[index];
+  void _onItemTapped(int index) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CustomMainNavigationScreen(initialIndex: index),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final String currentLocation = GoRouterState.of(context).uri.toString();
-    final int currentIndex = _getCurrentIndex(currentLocation);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(_getScreenTitle(currentLocation)),
+        title: Text(_screenTitles[_currentScreenIndex]),
         backgroundColor: Colors.pink[100],
         elevation: 2,
+        automaticallyImplyLeading: false,
       ),
-      body: widget.child,
+      body: _screens[_currentScreenIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (index) {
-          context.go(_routes[index]);
-        },
+        currentIndex: _currentScreenIndex,
+        onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.pink,
         unselectedItemColor: Colors.grey,
@@ -156,111 +107,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.pool),
             label: 'SPA',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class FacialCareContainer extends StatelessWidget {
-  const FacialCareContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Уход за лицом'),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => context.go('/body_care'),
-            child: const Text('Перейти к уходу за телом'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class BodyCareContainer extends StatelessWidget {
-  const BodyCareContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Уход за телом'),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => context.go('/spa'),
-            child: const Text('Перейти к SPA'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class HairRemovalContainer extends StatelessWidget {
-  const HairRemovalContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Депиляция'),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => context.go('/massage'),
-            child: const Text('Перейти к массажу'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class MassageContainer extends StatelessWidget {
-  const MassageContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Массаж'),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => context.go('/facial_care'),
-            child: const Text('Перейти к уходу за лицом'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SpaContainer extends StatelessWidget {
-  const SpaContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('SPA-программы'),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => context.go('/hair_removal'),
-            child: const Text('Перейти к депиляции'),
           ),
         ],
       ),
