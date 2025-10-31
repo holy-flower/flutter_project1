@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/body_service.dart';
 import '../screens/body_care_screen.dart';
+import '../screens/add_body_service_screen.dart';
 
 class BodyCareContainer extends StatefulWidget {
   const BodyCareContainer({super.key});
@@ -132,24 +133,26 @@ class _BodyCareContainerState extends State<BodyCareContainer> {
     );
   }
 
-  void _addService() {
+  void _navigateAddToService() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddBodyServiceScreen(
+                onServiceAdded: _addService,
+            )
+        )
+    );
+  }
+
+  void _addService(BodyService newService) {
     setState(() {
-      _services.add(BodyService(
-        id: DateTime.now().microsecondsSinceEpoch.toString(),
-        title: 'Новая услуга',
-        price: '${2000 + _services.length * 500} ₽',
-        duration: '${45 + _services.length * 5} мин',
-        description: 'Описание новой услуги по уходу за телом',
-        features: ['Новая функция 1', 'Новая функция 2'],
-        details: 'Подробное описание новой услуги будет добавлено позже. Это уникальная процедура, разработанная нашими специалистами.',
-        effects: ['Инновационный эффект 1', 'Долговременный результат', 'Видимое улучшение'],
-      ));
+      _services.add(newService);
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Новая услуга добавлена'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text('Услуга "${newService.title}" добавлена'),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -161,7 +164,7 @@ class _BodyCareContainerState extends State<BodyCareContainer> {
       selectedService: _selectedService,
       onSelectService: (int index) => _selectService(index),
       onDeleteService: (int index) => _deleteService(index),
-      onAddService: () => _addService(),
+      onAddService: () => _navigateAddToService(),
     );
   }
 }
