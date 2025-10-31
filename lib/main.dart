@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'features/facial_care/facial_care_feature.dart' as facial_care;
 import 'features/body_care/body_care_feature.dart' as body_care;
 import 'features/hair_removal/hair_removal_feature.dart' as hair_removal;
@@ -14,16 +15,47 @@ class CosmetologyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Салон Красоты "BeautyClinic"',
       theme: ThemeData(
         primarySwatch: Colors.pink,
         fontFamily: 'Roboto',
       ),
-      home: const MainNavigationScreen(),
+      routerConfig: _router,
     );
   }
 }
+
+final GoRouter _router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const MainNavigationScreen(),
+      routes: [
+        GoRoute(
+          path: 'facial_care',
+          builder: (context, state) => const facial_care.FacialCareContainer(),
+        ),
+        GoRoute(
+          path: 'body_care',
+          builder: (context, state) => const body_care.BodyCareContainer(),
+        ),
+        GoRoute(
+          path: 'hair_removal',
+          builder: (context, state) => const hair_removal.HairRemovalContainer(),
+        ),
+        GoRoute(
+          path: 'massage',
+          builder: (context, state) => const massage.MassageContainer(),
+        ),
+        GoRoute(
+          path: 'spa',
+          builder: (context, state) => const spa.SpaContainer(),
+        ),
+      ],
+    ),
+  ],
+);
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});

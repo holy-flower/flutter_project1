@@ -79,12 +79,3 @@ class SpaScreen extends StatelessWidget {
     );
   }
 }
-
-void _completeLogin() {
-  Navigator.pushReplacement<void, void>(
-    context,
-    MaterialPageRoute<void>(
-      builder: (BuildContext context) => const MyHomePage(),
-    ),
-  );
-}
