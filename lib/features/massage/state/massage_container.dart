@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../models/massage_service.dart';
 import '../screens/massage_screen.dart';
 import '../screens/add_massage_service_screen.dart';
@@ -109,14 +110,7 @@ class _MassageContainerState extends State<MassageContainer> {
   }
 
   void _navigateToAddMassage() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => AddMassageServiceScreen(
-                onMassageAdded: _addMassage,
-            )
-        )
-    );
+    context.push('/massage/add', extra: _addMassage);
   }
 
   void _addMassage(MassageService newMassage) {

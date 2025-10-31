@@ -10,6 +10,8 @@ import 'features/hair_removal/hair_removal_feature.dart' as hair_removal;
 import 'features/hair_removal/models/hair_removal_service.dart';
 import 'features/hair_removal/screens/add_hair_removal_service_screen.dart';
 import 'features/massage/massage_feature.dart' as massage;
+import 'features/massage/models/massage_service.dart';
+import 'features/massage/screens/add_massage_service_screen.dart';
 import 'features/spa/spa_feature.dart' as spa;
 
 void main() {
@@ -99,6 +101,15 @@ final GoRouter _router = GoRouter(
             final Function(HairRemovalService) onServiceAdded = state.extra as Function(HairRemovalService);
             return MaterialPage(
               child: AddHairRemovalServiceScreen(onServiceAdded: onServiceAdded),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/massage/add',
+          pageBuilder: (context, state) {
+            final Function(MassageService) onServiceAdded = state.extra as Function(MassageService);
+            return MaterialPage(
+              child: AddMassageServiceScreen(onMassageAdded: onServiceAdded),
             );
           },
         ),
