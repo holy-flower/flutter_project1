@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project1/features/facial_care/facial_care_feature.dart';
 import '../models/facial_service.dart';
 
 class AddFacialServiceScreen extends StatefulWidget {
   final Function(FacialService) onServiceAdded;
+  final List<FacialService> currentServices;
 
   const AddFacialServiceScreen({
     super.key,
     required this.onServiceAdded,
+    required this.currentServices,
   });
 
   @override
@@ -45,8 +48,14 @@ class _AddFacialServiceScreenState extends State<AddFacialServiceScreen> {
         effects: _effectsController.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(),
       );
 
-      widget.onServiceAdded(newService);
-      Navigator.pop(context);
+      final updatedServices = List<FacialService>.from(widget.currentServices)
+      ..add(newService);
+
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+              builder: (context) => FacialCareContainer.withServices(updatedServices),
+          ),
+      );
     }
   }
 

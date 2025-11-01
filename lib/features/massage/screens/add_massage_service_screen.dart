@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import '../models/massage_service.dart';
+import '../state/massage_container.dart';
 
 class AddMassageServiceScreen extends StatefulWidget {
   final Function(MassageService) onMassageAdded;
+  final List<MassageService> currentMassages;
 
   const AddMassageServiceScreen({
     super.key,
     required this.onMassageAdded,
+    required this.currentMassages,
   });
 
   @override
@@ -51,8 +54,14 @@ class _AddMassageServiceScreenState extends State<AddMassageServiceScreen> {
         benefits: _benefitsController.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(),
       );
 
-      widget.onMassageAdded(newMassage);
-      Navigator.pop(context);
+      final updatedMassages = List<MassageService>.from(widget.currentMassages)
+        ..add(newMassage);
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => MassageContainer.withMassages(updatedMassages),
+        ),
+      );
     }
   }
 

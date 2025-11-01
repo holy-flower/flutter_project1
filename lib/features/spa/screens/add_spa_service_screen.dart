@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import '../models/spa_service.dart';
+import '../state/spa_container.dart';
 
 class AddSpaServiceScreen extends StatefulWidget {
   final Function(SpaService) onSpaServiceAdded;
+  final List<SpaService> currentPrograms;
 
   const AddSpaServiceScreen({
     super.key,
     required this.onSpaServiceAdded,
+    required this.currentPrograms,
   });
 
   @override
@@ -58,8 +61,14 @@ class _AddSpaServiceScreenState extends State<AddSpaServiceScreen> {
         color: _selectedColor,
       );
 
-      widget.onSpaServiceAdded(newSpaService);
-      Navigator.pop(context);
+      final updatedPrograms = List<SpaService>.from(widget.currentPrograms)
+        ..add(newSpaService);
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => SpaContainer.withPrograms(updatedPrograms),
+        ),
+      );
     }
   }
 

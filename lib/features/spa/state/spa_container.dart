@@ -5,7 +5,16 @@ import '../screens/spa_screen.dart';
 import '../screens/add_spa_service_screen.dart';
 
 class SpaContainer extends StatefulWidget {
-  const SpaContainer({super.key});
+  final List<SpaService> initialPrograms;
+
+  const SpaContainer({
+    super.key,
+    this.initialPrograms = const [],
+  });
+
+  static Widget withPrograms(List<SpaService> programs) {
+    return SpaContainer(initialPrograms: programs);
+  }
 
   @override
   State<SpaContainer> createState() => _SpaContainerState();
@@ -13,83 +22,91 @@ class SpaContainer extends StatefulWidget {
 
 class _SpaContainerState extends State<SpaContainer> {
   int _selectedProgram = 0;
-  final List<SpaService> _programs = [
-    SpaService(
-      id: '1',
-      title: 'SPA "Релакс"',
-      duration: '120 мин',
-      price: '8000 ₽',
-      description: 'Идеальная программа для снятия стресса и напряжения. Полное погружение в атмосферу спокойствия и гармонии.',
-      includes: [
-        'Консультация специалиста',
-        'Ароматическая ванна',
-        'Расслабляющий массаж всего тела',
-        'Уход за лицом',
-        'Травяной чай и отдых'
-      ],
-      color: Colors.purple,
-    ),
-    SpaService(
-      id: '2',
-      title: 'SPA "Королевский"',
-      duration: '180 мин',
-      price: '12000 ₽',
-      description: 'Премиальный уход для настоящих ценителей роскоши. Исключительный комфорт и индивидуальный подход.',
-      includes: [
-        'Персональный SPA-консультант',
-        'Джакузи с гидромассажем',
-        'SPA-массаж премиум-класса',
-        'Экспресс-уход за лицом',
-        'Профессиональный маникюр',
-        'Фруктовая тарелка и шампанское'
-      ],
-      color: Colors.deepPurple,
-    ),
-    SpaService(
-      id: '3',
-      title: 'SPA "Антистресс"',
-      duration: '90 мин',
-      price: '6000 ₽',
-      description: 'Быстрое восстановление при нервном напряжении. Эффективные техники релаксации за короткое время.',
-      includes: [
-        'Аромотерапия',
-        'Расслабляющий массаж',
-        'Медитативная практика',
-        'Травяной сбор'
-      ],
-      color: Colors.purpleAccent,
-    ),
-    SpaService(
-      id: '4',
-      title: 'SPA "Детокс"',
-      duration: '150 мин',
-      price: '9000 ₽',
-      description: 'Очищение организма и восстановление энергии. Комплексное очищение и обновление организма.',
-      includes: [
-        'Сухая чистка тела',
-        'Обертывание водорослями',
-        'Лимфодренажный массаж',
-        'Детокс-напитки',
-        'Консультация по питанию'
-      ],
-      color: Colors.purple,
-    ),
-    SpaService(
-      id: '5',
-      title: 'SPA "Омоложение"',
-      duration: '140 мин',
-      price: '11000 ₽',
-      description: 'Программа для восстановления молодости и тонуса кожи. Инновационные антивозрастные методики.',
-      includes: [
-        'Антивозрастной уход за лицом',
-        'Лимфодренажный массаж',
-        'Альгинатная маска',
-        'Витаминный коктейль',
-        'Консультация косметолога'
-      ],
-      color: Colors.deepPurpleAccent,
-    ),
-  ];
+  late List<SpaService> _programs;
+
+  @override
+  void initState() {
+    super.initState();
+    _programs = widget.initialPrograms.isNotEmpty
+        ? List.from(widget.initialPrograms)
+        : [
+      SpaService(
+        id: '1',
+        title: 'SPA "Релакс"',
+        duration: '120 мин',
+        price: '8000 ₽',
+        description: 'Идеальная программа для снятия стресса и напряжения. Полное погружение в атмосферу спокойствия и гармонии.',
+        includes: [
+          'Консультация специалиста',
+          'Ароматическая ванна',
+          'Расслабляющий массаж всего тела',
+          'Уход за лицом',
+          'Травяной чай и отдых'
+        ],
+        color: Colors.purple,
+      ),
+      SpaService(
+        id: '2',
+        title: 'SPA "Королевский"',
+        duration: '180 мин',
+        price: '12000 ₽',
+        description: 'Премиальный уход для настоящих ценителей роскоши. Исключительный комфорт и индивидуальный подход.',
+        includes: [
+          'Персональный SPA-консультант',
+          'Джакузи с гидромассажем',
+          'SPA-массаж премиум-класса',
+          'Экспресс-уход за лицом',
+          'Профессиональный маникюр',
+          'Фруктовая тарелка и шампанское'
+        ],
+        color: Colors.deepPurple,
+      ),
+      SpaService(
+        id: '3',
+        title: 'SPA "Антистресс"',
+        duration: '90 мин',
+        price: '6000 ₽',
+        description: 'Быстрое восстановление при нервном напряжении. Эффективные техники релаксации за короткое время.',
+        includes: [
+          'Аромотерапия',
+          'Расслабляющий массаж',
+          'Медитативная практика',
+          'Травяной сбор'
+        ],
+        color: Colors.purpleAccent,
+      ),
+      SpaService(
+        id: '4',
+        title: 'SPA "Детокс"',
+        duration: '150 мин',
+        price: '9000 ₽',
+        description: 'Очищение организма и восстановление энергии. Комплексное очищение и обновление организма.',
+        includes: [
+          'Сухая чистка тела',
+          'Обертывание водорослями',
+          'Лимфодренажный массаж',
+          'Детокс-напитки',
+          'Консультация по питанию'
+        ],
+        color: Colors.purple,
+      ),
+      SpaService(
+        id: '5',
+        title: 'SPA "Омоложение"',
+        duration: '140 мин',
+        price: '11000 ₽',
+        description: 'Программа для восстановления молодости и тонуса кожи. Инновационные антивозрастные методики.',
+        includes: [
+          'Антивозрастной уход за лицом',
+          'Лимфодренажный массаж',
+          'Альгинатная маска',
+          'Витаминный коктейль',
+          'Консультация косметолога'
+        ],
+        color: Colors.deepPurpleAccent,
+      ),
+    ];
+  }
 
   void _selectProgram(int index) {
     setState(() {
@@ -127,7 +144,15 @@ class _SpaContainerState extends State<SpaContainer> {
   }
 
   void _navigateToAddProgram() {
-    context.push('/spa/add', extra: _addProgram);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddSpaServiceScreen(
+          onSpaServiceAdded: _addProgram,
+          currentPrograms: _programs,
+        ),
+      ),
+    );
   }
 
   void _addProgram(SpaService newProgram) {

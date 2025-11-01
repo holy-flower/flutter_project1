@@ -1,19 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project1/features/facial_care/models/facial_service.dart';
-import 'package:flutter_project1/features/facial_care/screens/add_facial_service_screen.dart';
-import 'package:go_router/go_router.dart';
-import 'features/body_care/models/body_service.dart';
-import 'features/body_care/screens/add_body_service_screen.dart';
 import 'features/facial_care/facial_care_feature.dart' as facial_care;
 import 'features/body_care/body_care_feature.dart' as body_care;
 import 'features/hair_removal/hair_removal_feature.dart' as hair_removal;
-import 'features/hair_removal/models/hair_removal_service.dart';
-import 'features/hair_removal/screens/add_hair_removal_service_screen.dart';
 import 'features/massage/massage_feature.dart' as massage;
-import 'features/massage/models/massage_service.dart';
-import 'features/massage/screens/add_massage_service_screen.dart';
-import 'features/spa/models/spa_service.dart';
-import 'features/spa/screens/add_spa_service_screen.dart';
 import 'features/spa/spa_feature.dart' as spa;
 
 void main() {
@@ -25,116 +14,19 @@ class CosmetologyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp(
       title: 'Салон Красоты "BeautyClinic"',
       theme: ThemeData(
         primarySwatch: Colors.pink,
         fontFamily: 'Roboto',
       ),
-      routerConfig: _router,
+      home: const MainNavigationScreen(),
     );
   }
 }
 
-final GoRouter _router = GoRouter(
-  routes: [
-    ShellRoute(
-      builder: (context, state, child) {
-        return MainNavigationScreen(child: child);
-      },
-      routes: [
-        GoRoute(
-          path: '/',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: const facial_care.FacialCareContainer(),
-          ),
-        ),
-        GoRoute(
-          path: '/facial_care',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: const facial_care.FacialCareContainer(),
-          ),
-        ),
-        GoRoute(
-          path: '/body_care',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: const body_care.BodyCareContainer(),
-          ),
-        ),
-        GoRoute(
-          path: '/hair_removal',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: const hair_removal.HairRemovalContainer(),
-          ),
-        ),
-        GoRoute(
-          path: '/massage',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: const massage.MassageContainer(),
-          ),
-        ),
-        GoRoute(
-          path: '/spa',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: const spa.SpaContainer(),
-          ),
-        ),
-
-
-        GoRoute(
-          path: '/facial_care/add',
-          pageBuilder: (context, state) {
-            final Function(FacialService) onServiceAdded = state.extra as Function(FacialService);
-            return MaterialPage(
-                child: AddFacialServiceScreen(onServiceAdded: onServiceAdded),
-            );
-          }
-        ),
-        GoRoute(
-          path: '/body_care/add',
-          pageBuilder: (context, state) {
-            final Function(BodyService) onServiceAdded = state.extra as Function(BodyService);
-            return MaterialPage(
-              child: AddBodyServiceScreen(onServiceAdded: onServiceAdded),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/hair_removal/add',
-          pageBuilder: (context, state) {
-            final Function(HairRemovalService) onServiceAdded = state.extra as Function(HairRemovalService);
-            return MaterialPage(
-              child: AddHairRemovalServiceScreen(onServiceAdded: onServiceAdded),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/massage/add',
-          pageBuilder: (context, state) {
-            final Function(MassageService) onServiceAdded = state.extra as Function(MassageService);
-            return MaterialPage(
-              child: AddMassageServiceScreen(onMassageAdded: onServiceAdded),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/spa/add',
-          pageBuilder: (context, state) {
-            final Function(SpaService) onServiceAdded = state.extra as Function(SpaService);
-            return MaterialPage(
-              child: AddSpaServiceScreen(onSpaServiceAdded: onServiceAdded),
-            );
-          },
-        ),
-      ],
-    ),
-  ],
-);
-
 class MainNavigationScreen extends StatefulWidget {
-  final Widget child;
-
-  const MainNavigationScreen({super.key, required this.child});
+  const MainNavigationScreen({super.key});
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
@@ -143,12 +35,12 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentScreenIndex = 0;
 
-  final List<String> _routes = [
-    '/facial_care',
-    '/body_care',
-    '/hair_removal',
-    '/massage',
-    '/spa'
+  final List<Widget> _screens = [
+    const facial_care.FacialCareContainer(),
+    const body_care.BodyCareContainer(),
+    const hair_removal.HairRemovalContainer(),
+    const massage.MassageContainer(),
+    const spa.SpaContainer(),
   ];
 
   final List<String> _screenTitles = [
@@ -159,38 +51,25 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     'SPA-программы',
   ];
 
-  int _getCurrentIndex(String location) {
-    for (int i = 0; i < _routes.length; i++) {
-      if (location == _routes[i] || location.endsWith(_routes[i])) {
-        return i;
-      }
-    }
-    return 0;
-  }
-
-  String _getScreenTitle(String location) {
-    final int index = _getCurrentIndex(location);
-    return _screenTitles[index];
+  void _onItemTapped(int index) {
+    setState(() {
+      _currentScreenIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final String currentLocation = GoRouterState.of(context).uri.toString();
-    final int currentIndex = _getCurrentIndex(currentLocation);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(_getScreenTitle(currentLocation)),
+        title: Text(_screenTitles[_currentScreenIndex]),
         backgroundColor: Colors.pink[100],
         elevation: 2,
         automaticallyImplyLeading: false,
       ),
-      body: widget.child,
+      body: _screens[_currentScreenIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (index) {
-          context.go(_routes[index]);
-        },
+        currentIndex: _currentScreenIndex,
+        onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.pink,
         unselectedItemColor: Colors.grey,

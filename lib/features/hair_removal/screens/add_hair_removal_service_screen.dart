@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import '../models/hair_removal_service.dart';
+import '../state/hair_removal_container.dart';
 
 class AddHairRemovalServiceScreen extends StatefulWidget {
   final Function(HairRemovalService) onServiceAdded;
+  final List<HairRemovalService> currentServices;
 
   const AddHairRemovalServiceScreen({
     super.key,
     required this.onServiceAdded,
+    required this.currentServices,
   });
 
   @override
@@ -58,8 +61,14 @@ class _AddHairRemovalServiceScreenState extends State<AddHairRemovalServiceScree
         zones: _zonesController.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(),
       );
 
-      widget.onServiceAdded(newService);
-      Navigator.pop(context);
+      final updatedServices = List<HairRemovalService>.from(widget.currentServices)
+        ..add(newService);
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => HairRemovalContainer.withServices(updatedServices),
+        ),
+      );
     }
   }
 

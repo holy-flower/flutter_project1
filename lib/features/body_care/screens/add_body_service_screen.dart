@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project1/features/body_care/body_care_feature.dart';
 import '../models/body_service.dart';
 
 class AddBodyServiceScreen extends StatefulWidget {
   final Function(BodyService) onServiceAdded;
+  final List<BodyService> currentServices;
 
   const AddBodyServiceScreen({
     super.key,
     required this.onServiceAdded,
+    required this.currentServices,
   });
 
   @override
@@ -48,8 +51,14 @@ class _AddBodyServiceScreenState extends State<AddBodyServiceScreen> {
         effects: _effectsController.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(),
       );
 
-      widget.onServiceAdded(newService);
-      Navigator.pop(context);
+      final updateServices = List<BodyService>.from(widget.currentServices)
+      ..add(newService);
+
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => BodyCareContainer.withServices(updateServices),
+          ),
+      );
     }
   }
 
