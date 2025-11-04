@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project1/features/body_care/body_care_feature.dart';
+import 'package:go_router/go_router.dart';
 import '../models/body_service.dart';
 
 class AddBodyServiceScreen extends StatefulWidget {
@@ -54,10 +55,9 @@ class _AddBodyServiceScreenState extends State<AddBodyServiceScreen> {
       final updateServices = List<BodyService>.from(widget.currentServices)
       ..add(newService);
 
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => BodyCareContainer.withServices(updateServices),
-          ),
+      context.pushReplacement(
+        '/body_care',
+        extra: updateServices,
       );
     }
   }

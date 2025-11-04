@@ -178,14 +178,12 @@ class _MassageContainerState extends State<MassageContainer> {
   }
 
   void _navigateToAddMassage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AddMassageServiceScreen(
-          onMassageAdded: _addMassage,
-          currentMassages: _massages,
-        ),
-      ),
+    context.push(
+      '/add_massage_service',
+      extra: {
+        'onMassageAdded': _addMassage,
+        'currentMassages': _massages,
+      },
     );
   }
 

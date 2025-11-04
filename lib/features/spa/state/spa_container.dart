@@ -144,14 +144,12 @@ class _SpaContainerState extends State<SpaContainer> {
   }
 
   void _navigateToAddProgram() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AddSpaServiceScreen(
-          onSpaServiceAdded: _addProgram,
-          currentPrograms: _programs,
-        ),
-      ),
+    context.push(
+      '/add_spa_service',
+      extra: {
+        'onSpaServiceAdded': _addProgram,
+        'currentPrograms': _programs,
+      },
     );
   }
 

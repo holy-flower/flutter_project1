@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../models/spa_service.dart';
 import '../state/spa_container.dart';
 
@@ -64,10 +65,9 @@ class _AddSpaServiceScreenState extends State<AddSpaServiceScreen> {
       final updatedPrograms = List<SpaService>.from(widget.currentPrograms)
         ..add(newSpaService);
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => SpaContainer.withPrograms(updatedPrograms),
-        ),
+      context.pushReplacement(
+        '/spa',
+        extra: updatedPrograms,
       );
     }
   }

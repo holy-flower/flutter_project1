@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../models/hair_removal_service.dart';
 import '../state/hair_removal_container.dart';
 
@@ -64,10 +65,9 @@ class _AddHairRemovalServiceScreenState extends State<AddHairRemovalServiceScree
       final updatedServices = List<HairRemovalService>.from(widget.currentServices)
         ..add(newService);
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => HairRemovalContainer.withServices(updatedServices),
-        ),
+      context.pushReplacement(
+        '/hair_removal',
+        extra: updatedServices,
       );
     }
   }

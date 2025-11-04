@@ -85,14 +85,12 @@ class _HairRemovalContainerState extends State<HairRemovalContainer> {
   }
 
   void _navigateToAddService() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AddHairRemovalServiceScreen(
-          onServiceAdded: _addService,
-          currentServices: _services,
-        ),
-      ),
+    context.push(
+      '/add_hair_removal_service',
+      extra: {
+        'onServiceAdded': _addService,
+        'currentServices': _services,
+      },
     );
   }
 

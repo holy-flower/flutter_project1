@@ -151,14 +151,12 @@ class _BodyCareContainerState extends State<BodyCareContainer> {
   }
 
   void _navigateAddToService() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => AddBodyServiceScreen(
-              onServiceAdded: _addService,
-              currentServices: _services,
-            ),
-        ),
+    context.push(
+      '/add_body_service',
+      extra: {
+        'onServiceAdded': _addService,
+        'currentServices': _services,
+      },
     );
   }
 

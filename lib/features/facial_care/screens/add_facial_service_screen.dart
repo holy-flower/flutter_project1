@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project1/features/facial_care/facial_care_feature.dart';
+import 'package:go_router/go_router.dart';
 import '../models/facial_service.dart';
 
 class AddFacialServiceScreen extends StatefulWidget {
@@ -51,10 +52,9 @@ class _AddFacialServiceScreenState extends State<AddFacialServiceScreen> {
       final updatedServices = List<FacialService>.from(widget.currentServices)
       ..add(newService);
 
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) => FacialCareContainer.withServices(updatedServices),
-          ),
+      context.pushReplacement(
+        '/facial_care',
+        extra: updatedServices,
       );
     }
   }

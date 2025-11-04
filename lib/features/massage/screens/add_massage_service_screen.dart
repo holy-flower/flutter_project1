@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../models/massage_service.dart';
 import '../state/massage_container.dart';
 
@@ -57,10 +58,9 @@ class _AddMassageServiceScreenState extends State<AddMassageServiceScreen> {
       final updatedMassages = List<MassageService>.from(widget.currentMassages)
         ..add(newMassage);
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => MassageContainer.withMassages(updatedMassages),
-        ),
+      context.pushReplacement(
+        '/massage',
+        extra: updatedMassages,
       );
     }
   }
