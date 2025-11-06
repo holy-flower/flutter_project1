@@ -25,6 +25,7 @@ import 'features/spa/state/spa_container.dart';
 
 void main() {
   setupServiceLocator();
+  factoryExample();
   runApp(const CosmetologyApp());
 }
 

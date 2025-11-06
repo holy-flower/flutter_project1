@@ -128,10 +128,6 @@ class _SpaContainerState extends State<SpaContainer> {
       }
     });
 
-    final appState = getIt<AppState>();
-    print('Текущее состояние приложения: ${appState.state}');
-    print('Название приложения: ${appState.appName}');
-
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Программа "${removedProgram.title}" удалена'),
