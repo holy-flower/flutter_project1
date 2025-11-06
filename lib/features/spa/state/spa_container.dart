@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../newFile.dart';
 import '../models/spa_service.dart';
 import '../screens/spa_screen.dart';
 import '../screens/add_spa_service_screen.dart';
@@ -125,6 +126,9 @@ class _SpaContainerState extends State<SpaContainer> {
         _selectedProgram = _selectedProgram == index ? 0 : _selectedProgram - 1;
       }
     });
+
+    final appState = AppStateContainer.of(context);
+    print('Текущее состояние приложения: ${appState.state}');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

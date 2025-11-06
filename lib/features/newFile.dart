@@ -1,29 +1,17 @@
-class MyClass {
-  const MyClass({
-    required String arg1,
-    required String arg2,
-    required String arg3,
-    required String arg4,
-    required String arg5,
-    required String arg6,
-    required String arg7,
-    required String arg8,
-    required String arg9,
-    required String arg10,
-  });
-}
+import 'package:flutter/cupertino.dart';
 
-void main(List<String> args) {
-  const obj = MyClass(
-    arg1: 'arg',
-    arg2: 'arg2',
-    arg3: 'arg3',
-    arg4: 'arg4',
-    arg5: 'arg5',
-    arg6: 'arg6',
-    arg7: 'arg7',
-    arg8: 'arg8',
-    arg9: 'arg9',
-    arg10: 'arg10',
-  );
+class AppStateContainer extends InheritedWidget {
+  final String state = 'active';
+
+  const AppStateContainer({
+    super.key,
+    required super.child,
+  });
+
+  static AppStateContainer of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<AppStateContainer>()!;
+  }
+
+  @override
+  bool updateShouldNotify(AppStateContainer oldWidget) => false;
 }

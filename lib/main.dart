@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project1/features/newFile.dart';
 import 'package:go_router/go_router.dart';
 import 'features/body_care/models/body_service.dart';
 import 'features/body_care/screens/add_body_service_screen.dart';
@@ -30,14 +31,17 @@ class CosmetologyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Салон Красоты "BeautyClinic"',
-      theme: ThemeData(
-        primarySwatch: Colors.pink,
-        fontFamily: 'Roboto',
-      ),
-      routerConfig: _router,
+    return AppStateContainer(
+        child:MaterialApp.router(
+          title: 'Салон Красоты "BeautyClinic"',
+          theme: ThemeData(
+            primarySwatch: Colors.pink,
+            fontFamily: 'Roboto',
+          ),
+          routerConfig: _router,
+        ),
     );
+
   }
 }
 
