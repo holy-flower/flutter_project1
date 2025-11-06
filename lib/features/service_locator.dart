@@ -37,16 +37,17 @@ void factoryExample() {
   print('adminState1 и adminState2 одинаковые? ${adminState1 == adminState2}');
 }
 
-void getExamples() {
-  final appState1 = GetIt.instance<AppState>();
-  final appState2 = GetIt.I<AppState>();
+void checkRegistrationExamples() {
+  final isUserRegistered = GetIt.I.isRegistered<AppState>(instanceName: 'user_factory');
+  final isAdminRegistered = GetIt.instance.isRegistered<AppState>(instanceName: 'admin_factory');
+  final isMainRegistered = GetIt.I.isRegistered<AppState>();
 
-  final userState = GetIt.I<AppState>(instanceName: 'user_factory');
-  final adminState = GetIt.instance<AppState>(instanceName: 'admin_factory');
+  print('User factory зарегистрирован: $isUserRegistered');
+  print('Admin factory зарегистрирован: $isAdminRegistered');
+  print('Main AppState зарегистрирован: $isMainRegistered');
 
-  print('Основное состояние: ${appState1.state}');
-  print('User состояние: ${userState.state}');
-  print('Admin состояние: ${adminState.state}');
+  final isNotRegistered = GetIt.I.isRegistered<AppState>(instanceName: 'not_existing');
+  print('Несуществующий объект: $isNotRegistered');
 }
 
 class AppState {
