@@ -37,6 +37,18 @@ void factoryExample() {
   print('adminState1 и adminState2 одинаковые? ${adminState1 == adminState2}');
 }
 
+void getExamples() {
+  final appState1 = GetIt.instance<AppState>();
+  final appState2 = GetIt.I<AppState>();
+
+  final userState = GetIt.I<AppState>(instanceName: 'user_factory');
+  final adminState = GetIt.instance<AppState>(instanceName: 'admin_factory');
+
+  print('Основное состояние: ${appState1.state}');
+  print('User состояние: ${userState.state}');
+  print('Admin состояние: ${adminState.state}');
+}
+
 class AppState {
   final String type;
   String state = 'active';
