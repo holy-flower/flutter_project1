@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/cupertino.dart';
 
 class AppStateContainer extends InheritedWidget {
@@ -15,3 +16,4 @@ class AppStateContainer extends InheritedWidget {
   @override
   bool updateShouldNotify(AppStateContainer oldWidget) => false;
 }
+ */

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project1/features/newFile.dart';
+import 'package:flutter_project1/features/service_locator.dart';
 import 'package:go_router/go_router.dart';
 import 'features/body_care/models/body_service.dart';
 import 'features/body_care/screens/add_body_service_screen.dart';
@@ -23,6 +24,7 @@ import 'features/spa/spa_feature.dart' as spa;
 import 'features/spa/state/spa_container.dart';
 
 void main() {
+  setupServiceLocator();
   runApp(const CosmetologyApp());
 }
 
@@ -31,17 +33,14 @@ class CosmetologyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppStateContainer(
-        child:MaterialApp.router(
-          title: 'Салон Красоты "BeautyClinic"',
-          theme: ThemeData(
-            primarySwatch: Colors.pink,
-            fontFamily: 'Roboto',
-          ),
-          routerConfig: _router,
-        ),
+    return MaterialApp.router(
+    title: 'Салон Красоты "BeautyClinic"',
+    theme: ThemeData(
+    primarySwatch: Colors.pink,
+    fontFamily: 'Roboto',
+    ),
+    routerConfig: _router,
     );
-
   }
 }
 

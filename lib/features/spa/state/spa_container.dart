@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project1/features/service_locator.dart';
 import 'package:go_router/go_router.dart';
 import '../../newFile.dart';
 import '../models/spa_service.dart';
@@ -127,8 +128,9 @@ class _SpaContainerState extends State<SpaContainer> {
       }
     });
 
-    final appState = AppStateContainer.of(context);
+    final appState = getIt<AppState>();
     print('Текущее состояние приложения: ${appState.state}');
+    print('Название приложения: ${appState.appName}');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
