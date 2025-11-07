@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project1/features/newFile.dart';
-import 'package:flutter_project1/features/service_locator.dart';
+import 'package:flutter_project1/AppStateContainer.dart';
+import 'package:flutter_project1/features/service_locator.dart' hide AppState;
 import 'package:go_router/go_router.dart';
 import 'features/body_care/models/body_service.dart';
 import 'features/body_care/screens/add_body_service_screen.dart';
@@ -24,8 +24,6 @@ import 'features/spa/spa_feature.dart' as spa;
 import 'features/spa/state/spa_container.dart';
 
 void main() {
-  setupServiceLocator();
-  factoryExample();
   runApp(const CosmetologyApp());
 }
 
@@ -34,13 +32,16 @@ class CosmetologyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-    title: 'Салон Красоты "BeautyClinic"',
-    theme: ThemeData(
-    primarySwatch: Colors.pink,
-    fontFamily: 'Roboto',
-    ),
-    routerConfig: _router,
+    return AppStateContainer(
+        state: AppState(),
+        child: MaterialApp.router(
+          title: 'Салон Красоты "BeautyClinic"',
+          theme: ThemeData(
+            primarySwatch: Colors.pink,
+            fontFamily: 'Roboto',
+          ),
+          routerConfig: _router,
+        ),
     );
   }
 }
@@ -210,13 +211,25 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     final String currentLocation = GoRouterState.of(context).uri.toString();
     final int currentIndex = _getCurrentIndex(currentLocation);
+    final String screenTitle = _getScreenTitle(currentLocation);
+
+    final appState = AppStateContainer.of(context).state;
+    appState.setCurrentScreen(screenTitle);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_getScreenTitle(currentLocation)),
+        title: Text(screenTitle),
         backgroundColor: Colors.pink[100],
         elevation: 2,
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+              onPressed: () {
+                _showAppStats(context);
+              },
+              icon: const Icon(Icons.info_outline),
+          ),
+        ],
       ),
       body: widget.child,
       bottomNavigationBar: BottomNavigationBar(
@@ -234,6 +247,17 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.spa), label: 'Массаж'),
           BottomNavigationBarItem(icon: Icon(Icons.pool), label: 'SPA'),
         ],
+      ),
+    );
+  }
+
+  void _showAppStats(BuildContext context) {
+    final appState = AppStateContainer.of(context).state;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Текущий экран: ${appState.currentScreen}'),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
