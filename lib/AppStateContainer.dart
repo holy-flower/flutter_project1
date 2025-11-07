@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 
 class AppState {
@@ -45,3 +46,4 @@ class AppStateContainer extends InheritedWidget {
         state.currentScreen != oldWidget.state.currentScreen;
   }
 }
+ */

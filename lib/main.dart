@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project1/AppStateContainer.dart';
-import 'package:flutter_project1/features/service_locator.dart' hide AppState;
+import 'package:flutter_project1/service_locator.dart';
 import 'package:go_router/go_router.dart';
 import 'features/body_care/models/body_service.dart';
 import 'features/body_care/screens/add_body_service_screen.dart';
@@ -24,6 +24,7 @@ import 'features/spa/spa_feature.dart' as spa;
 import 'features/spa/state/spa_container.dart';
 
 void main() {
+  setupServiceLocator();
   runApp(const CosmetologyApp());
 }
 
@@ -32,16 +33,13 @@ class CosmetologyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppStateContainer(
-        state: AppState(),
-        child: MaterialApp.router(
-          title: 'Салон Красоты "BeautyClinic"',
-          theme: ThemeData(
-            primarySwatch: Colors.pink,
-            fontFamily: 'Roboto',
-          ),
-          routerConfig: _router,
-        ),
+    return MaterialApp.router(
+      title: 'Салон Красоты "BeautyClinic"',
+      theme: ThemeData(
+        primarySwatch: Colors.pink,
+        fontFamily: 'Roboto',
+      ),
+      routerConfig: _router,
     );
   }
 }
@@ -213,7 +211,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final int currentIndex = _getCurrentIndex(currentLocation);
     final String screenTitle = _getScreenTitle(currentLocation);
 
-    final appState = AppStateContainer.of(context).state;
+    final appState = getIt<AppState>();
     appState.setCurrentScreen(screenTitle);
 
     return Scaffold(
@@ -225,7 +223,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                _showAppStats(context);
+                _showAppStats();
               },
               icon: const Icon(Icons.info_outline),
           ),
@@ -251,8 +249,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     );
   }
 
-  void _showAppStats(BuildContext context) {
-    final appState = AppStateContainer.of(context).state;
+  void _showAppStats() {
+    final appState = getIt<AppState>();
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project1/features/service_locator.dart';
+import 'package:flutter_project1/service_locator.dart';
 import 'package:go_router/go_router.dart';
 import '../models/spa_service.dart';
 import '../screens/spa_screen.dart';
