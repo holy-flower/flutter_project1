@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project1/AppStateContainer.dart';
-import 'package:flutter_project1/service_locator.dart';
 import 'package:go_router/go_router.dart';
-import 'features/body_care/models/body_service.dart';
+import 'features/appointments/appointments_screen.dart';
+import 'features/auth/auth_screen.dart';
+import 'features/facial_care/screens/add_facial_service_screen.dart';
 import 'features/body_care/screens/add_body_service_screen.dart';
-import 'features/body_care/state/body_care_container.dart';
+import 'features/hair_removal/screens/add_hair_removal_service_screen.dart';
+import 'features/massage/screens/add_massage_service_screen.dart';
+import 'features/profile/profile_screen.dart';
+import 'features/settings/settings_screen.dart';
+import 'features/services/services_screen.dart';
 import 'features/facial_care/facial_care_feature.dart' as facial_care;
 import 'features/body_care/body_care_feature.dart' as body_care;
-import 'features/facial_care/models/facial_service.dart';
-import 'features/facial_care/screens/add_facial_service_screen.dart';
-import 'features/facial_care/state/facial_care_container.dart';
 import 'features/hair_removal/hair_removal_feature.dart' as hair_removal;
-import 'features/hair_removal/models/hair_removal_service.dart';
-import 'features/hair_removal/screens/add_hair_removal_service_screen.dart';
-import 'features/hair_removal/state/hair_removal_container.dart';
 import 'features/massage/massage_feature.dart' as massage;
-import 'features/massage/models/massage_service.dart';
-import 'features/massage/screens/add_massage_service_screen.dart';
-import 'features/massage/state/massage_container.dart';
-import 'features/spa/models/spa_service.dart';
 import 'features/spa/screens/add_spa_service_screen.dart';
 import 'features/spa/spa_feature.dart' as spa;
-import 'features/spa/state/spa_container.dart';
+
 
 void main() {
-  setupServiceLocator();
   runApp(const CosmetologyApp());
 }
 
@@ -45,56 +38,83 @@ class CosmetologyApp extends StatelessWidget {
 }
 
 final GoRouter _router = GoRouter(
+  initialLocation: '/auth',
   routes: [
+    GoRoute(
+      path: '/auth',
+      pageBuilder: (context, state) => MaterialPage(
+        child: AuthScreen(),
+      ),
+    ),
+
     ShellRoute(
       builder: (context, state, child) {
         return MainNavigationScreen(child: child);
       },
       routes: [
         GoRoute(
-          path: '/',
-          pageBuilder: (context, state) => NoTransitionPage(
-            child: const facial_care.FacialCareContainer(),
+          path: '/profile',
+          pageBuilder: (context, state) => MaterialPage(
+            child: ProfileScreen(),
           ),
         ),
+        GoRoute(
+          path: '/services',
+          pageBuilder: (context, state) => MaterialPage(
+            child: ServicesScreen(),
+          ),
+        ),
+        GoRoute(
+          path: '/appointments',
+          pageBuilder: (context, state) => MaterialPage(
+            child: AppointmentsScreen(),
+          ),
+        ),
+        GoRoute(
+          path: '/settings',
+          pageBuilder: (context, state) => MaterialPage(
+            child: SettingsScreen(),
+          ),
+        ),
+
         GoRoute(
           path: '/facial_care',
           pageBuilder: (context, state) => MaterialPage(
             child: state.extra != null
-                ? FacialCareContainer.withServices(state.extra as List<FacialService>)
-                : const FacialCareContainer(),
+                ? facial_care.FacialCareContainer.withServices(state.extra as List<facial_care.FacialService>)
+                : const facial_care.FacialCareContainer(),
           ),
         ),
         GoRoute(
           path: '/body_care',
           pageBuilder: (context, state) => MaterialPage(
             child: state.extra != null
-                ? BodyCareContainer.withServices(state.extra as List<BodyService>)
-                : const BodyCareContainer(),
+                ? body_care.BodyCareContainer.withServices(state.extra as List<body_care.BodyService>)
+                : const body_care.BodyCareContainer(),
           ),
         ),
         GoRoute(
           path: '/hair_removal',
           pageBuilder: (context, state) => MaterialPage(
             child: state.extra != null
-                ? HairRemovalContainer.withServices(state.extra as List<HairRemovalService>)
-                : const HairRemovalContainer(),
+                ? hair_removal.HairRemovalContainer.withServices(state.extra as List<hair_removal.HairRemovalService>)
+                : const hair_removal.HairRemovalContainer(),
           ),
         ),
         GoRoute(
           path: '/massage',
           pageBuilder: (context, state) => MaterialPage(
             child: state.extra != null
-                ? MassageContainer.withMassages(state.extra as List<MassageService>)
-                : const MassageContainer(),
+                ? massage.MassageContainer.withMassages(state.extra as List<massage.MassageService>)
+                : const massage.MassageContainer(),
           ),
         ),
         GoRoute(
           path: '/spa',
           pageBuilder: (context, state) => MaterialPage(
             child: state.extra != null
-                ? SpaContainer.withPrograms(state.extra as List<SpaService>)
-                : const SpaContainer(),
+                ? spa.SpaContainer.withPrograms(state.extra as List<spa.SpaService>)
+                : const spa.SpaContainer(),
           ),
         ),
 
@@ -104,8 +124,8 @@ final GoRouter _router = GoRouter(
             final extra = state.extra as Map<String, dynamic>?;
             return MaterialPage(
               child: AddFacialServiceScreen(
-                onServiceAdded: extra?['onServiceAdded'] as Function(FacialService),
-                currentServices: extra?['currentServices'] as List<FacialService>,
+                onServiceAdded: extra?['onServiceAdded'] as Function(facial_care.FacialService),
+                currentServices: extra?['currentServices'] as List<facial_care.FacialService>? ?? [],
               ),
             );
           },
@@ -116,8 +136,8 @@ final GoRouter _router = GoRouter(
             final extra = state.extra as Map<String, dynamic>?;
             return MaterialPage(
               child: AddBodyServiceScreen(
-                onServiceAdded: extra?['onServiceAdded'] as Function(BodyService),
-                currentServices: extra?['currentServices'] as List<BodyService>,
+                onServiceAdded: extra?['onServiceAdded'] as Function(body_care.BodyService),
+                currentServices: extra?['currentServices'] as List<body_care.BodyService>? ?? [],
               ),
             );
           },
@@ -128,8 +148,8 @@ final GoRouter _router = GoRouter(
             final extra = state.extra as Map<String, dynamic>?;
             return MaterialPage(
               child: AddHairRemovalServiceScreen(
-                onServiceAdded: extra?['onServiceAdded'] as Function(HairRemovalService),
-                currentServices: extra?['currentServices'] as List<HairRemovalService>,
+                onServiceAdded: extra?['onServiceAdded'] as Function(hair_removal.HairRemovalService),
+                currentServices: extra?['currentServices'] as List<hair_removal.HairRemovalService>? ?? [],
               ),
             );
           },
@@ -140,8 +160,8 @@ final GoRouter _router = GoRouter(
             final extra = state.extra as Map<String, dynamic>?;
             return MaterialPage(
               child: AddMassageServiceScreen(
-                onMassageAdded: extra?['onMassageAdded'] as Function(MassageService),
-                currentMassages: extra?['currentMassages'] as List<MassageService>,
+                onMassageAdded: extra?['onServiceAdded'] as Function(massage.MassageService),
+                currentMassages: extra?['currentServices'] as List<massage.MassageService>? ?? [],
               ),
             );
           },
@@ -152,8 +172,8 @@ final GoRouter _router = GoRouter(
             final extra = state.extra as Map<String, dynamic>?;
             return MaterialPage(
               child: AddSpaServiceScreen(
-                onSpaServiceAdded: extra?['onSpaServiceAdded'] as Function(SpaService),
-                currentPrograms: extra?['currentPrograms'] as List<SpaService>,
+                onSpaServiceAdded: extra?['onServiceAdded'] as Function(spa.SpaService),
+                currentPrograms: extra?['currentServices'] as List<spa.SpaService>? ?? [],
               ),
             );
           },
@@ -176,24 +196,32 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentScreenIndex = 0;
 
   final List<String> _routes = [
-    '/facial_care',
-    '/body_care',
-    '/hair_removal',
-    '/massage',
-    '/spa'
+    '/profile',
+    '/services',
+    '/appointments',
+    '/settings',
   ];
 
   final List<String> _screenTitles = [
-    'Уход за лицом',
-    'Уход за телом',
-    'Депиляция',
-    'Массаж',
-    'SPA-программы',
+    'Профиль',
+    'Услуги',
+    'Записи',
+    'Настройки',
   ];
 
   int _getCurrentIndex(String location) {
+    if (location.startsWith('/services') ||
+        location.startsWith('/facial_care') ||
+        location.startsWith('/body_care') ||
+        location.startsWith('/hair_removal') ||
+        location.startsWith('/massage') ||
+        location.startsWith('/spa') ||
+        location.startsWith('/add_')) {
+      return 1;
+    }
+
     for (int i = 0; i < _routes.length; i++) {
-      if (location == _routes[i] || location.endsWith(_routes[i])) {
+      if (location == _routes[i] || location.startsWith(_routes[i])) {
         return i;
       }
     }
@@ -202,6 +230,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   String _getScreenTitle(String location) {
     final int index = _getCurrentIndex(location);
+
+    if (location.startsWith('/facial_care') || location == '/add_facial_service') {
+      return 'Уход за лицом';
+    } else if (location.startsWith('/body_care') || location == '/add_body_service') {
+      return 'Уход за телом';
+    } else if (location.startsWith('/hair_removal') || location == '/add_hair_removal_service') {
+      return 'Депиляция';
+    } else if (location.startsWith('/massage') || location == '/add_massage_service') {
+      return 'Массаж';
+    } else if (location.startsWith('/spa') || location == '/add_spa_service') {
+      return 'SPA-программы';
+    }
+
     return _screenTitles[index];
   }
 
@@ -209,25 +250,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     final String currentLocation = GoRouterState.of(context).uri.toString();
     final int currentIndex = _getCurrentIndex(currentLocation);
-    final String screenTitle = _getScreenTitle(currentLocation);
-
-    final appState = getIt<AppState>();
-    appState.setCurrentScreen(screenTitle);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(screenTitle),
+        title: Text(_getScreenTitle(currentLocation)),
         backgroundColor: Colors.pink[100],
         elevation: 2,
         automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-              onPressed: () {
-                _showAppStats();
-              },
-              icon: const Icon(Icons.info_outline),
-          ),
-        ],
       ),
       body: widget.child,
       bottomNavigationBar: BottomNavigationBar(
@@ -239,23 +268,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         selectedItemColor: Colors.pink,
         unselectedItemColor: Colors.grey,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.face), label: 'Лицо'),
-          BottomNavigationBarItem(icon: Icon(Icons.self_improvement), label: 'Тело'),
-          BottomNavigationBarItem(icon: Icon(Icons.content_cut), label: 'Депиляция'),
-          BottomNavigationBarItem(icon: Icon(Icons.spa), label: 'Массаж'),
-          BottomNavigationBarItem(icon: Icon(Icons.pool), label: 'SPA'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Профиль'),
+          BottomNavigationBarItem(icon: Icon(Icons.spa), label: 'Услуги'),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Записи'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Настройки'),
         ],
-      ),
-    );
-  }
-
-  void _showAppStats() {
-    final appState = getIt<AppState>();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Текущий экран: ${appState.currentScreen}'),
-        duration: const Duration(seconds: 3),
       ),
     );
   }
