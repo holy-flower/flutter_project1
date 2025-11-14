@@ -12,6 +12,7 @@ import 'features/hair_removal/screens/add_hair_removal_service_screen.dart';
 import 'features/massage/screens/add_massage_service_screen.dart';
 import 'features/profile/profile_screen.dart';
 import 'features/services/bloc/services_bloc.dart';
+import 'features/settings/bloc/settings_bloc.dart';
 import 'features/settings/settings_screen.dart';
 import 'features/services/services_screen.dart';
 import 'features/facial_care/facial_care_feature.dart' as facial_care;
@@ -43,6 +44,9 @@ class CosmetologyApp extends StatelessWidget {
         ),
         BlocProvider<ServicesBloc>(
           create: (context) => ServicesBloc(),
+        ),
+        BlocProvider<SettingsBloc>(
+          create: (context) => SettingsBloc(),
         ),
       ],
       child: MaterialApp.router(
