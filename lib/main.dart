@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_project1/features/appointments/bloc/appointments_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_project1/features/appointments/bloc/appointments_bloc.dart';
+import 'package:flutter_project1/features/auth/bloc/auth_bloc.dart';
 import 'features/appointments/appointments_screen.dart';
 import 'features/auth/auth_screen.dart';
 import 'features/facial_care/screens/add_facial_service_screen.dart';
@@ -18,7 +19,6 @@ import 'features/massage/massage_feature.dart' as massage;
 import 'features/spa/screens/add_spa_service_screen.dart';
 import 'features/spa/spa_feature.dart' as spa;
 
-
 void main() {
   runApp(const CosmetologyApp());
 }
@@ -30,6 +30,9 @@ class CosmetologyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc(),
+        ),
         BlocProvider<AppointmentsBloc>(
           create: (context) => AppointmentsBloc()..add(LoadAppointments()),
         ),
@@ -255,33 +258,96 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return _screenTitles[index];
   }
 
+  void _showLogoutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Выход из системы'),
+          content: const Text('Вы уверены, что хотите выйти из аккаунта?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                context.pop();
+              },
+              child: const Text('Отмена'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.read<AuthBloc>().add(LogoutRequested());
+                context.pop();
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Вы успешно вышли из системы'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.pink),
+              child: const Text('Выйти', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final String currentLocation = GoRouterState.of(context).uri.toString();
     final int currentIndex = _getCurrentIndex(currentLocation);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_getScreenTitle(currentLocation)),
-        backgroundColor: Colors.pink[100],
-        elevation: 2,
-        automaticallyImplyLeading: false,
-      ),
-      body: widget.child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (index) {
-          context.go(_routes[index]);
-        },
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.pink,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Профиль'),
-          BottomNavigationBarItem(icon: Icon(Icons.spa), label: 'Услуги'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Записи'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Настройки'),
-        ],
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthUnauthenticated) {
+          Future.microtask(() => context.go('/auth'));
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_getScreenTitle(currentLocation)),
+          backgroundColor: Colors.pink[100],
+          elevation: 2,
+          automaticallyImplyLeading: false,
+          actions: [
+            if (currentLocation != '/auth')
+              IconButton(
+                icon: const Icon(Icons.logout),
+                tooltip: 'Выйти из системы',
+                onPressed: () => _showLogoutConfirmationDialog(context),
+              ),
+          ],
+        ),
+        body: widget.child,
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: currentIndex,
+          onTap: (index) {
+            context.go(_routes[index]);
+          },
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Colors.pink,
+          unselectedItemColor: Colors.grey,
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Профиль',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.spa),
+              label: 'Услуги',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Записи',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Настройки',
+            ),
+          ],
+        ),
       ),
     );
   }
