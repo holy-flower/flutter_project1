@@ -14,11 +14,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
     try {
       emit(AuthLoading());
-
-      // Имитация проверки данных
       await Future.delayed(const Duration(milliseconds: 1000));
-
-      // Простая валидация для демонстрации
       if (event.email.isNotEmpty && event.password.isNotEmpty) {
         emit(AuthAuthenticated(
           email: event.email,
@@ -35,10 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _onRegisterRequested(RegisterRequested event, Emitter<AuthState> emit) async {
     try {
       emit(AuthLoading());
-
-      // Имитация регистрации
       await Future.delayed(const Duration(milliseconds: 1000));
-
       if (event.email.isNotEmpty && event.password.isNotEmpty && event.password.length >= 6) {
         emit(AuthAuthenticated(
           email: event.email,
