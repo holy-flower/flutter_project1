@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_project1/features/appointments/bloc/appointments_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'features/appointments/appointments_screen.dart';
 import 'features/auth/auth_screen.dart';
@@ -26,13 +28,20 @@ class CosmetologyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Салон Красоты "BeautyClinic"',
-      theme: ThemeData(
-        primarySwatch: Colors.pink,
-        fontFamily: 'Roboto',
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AppointmentsBloc>(
+          create: (context) => AppointmentsBloc()..add(LoadAppointments()),
+        ),
+      ],
+      child: MaterialApp.router(
+        title: 'Салон Красоты "BeautyClinic"',
+        theme: ThemeData(
+          primarySwatch: Colors.pink,
+          fontFamily: 'Roboto',
+        ),
+        routerConfig: _router,
       ),
-      routerConfig: _router,
     );
   }
 }
