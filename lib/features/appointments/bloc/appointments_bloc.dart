@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-
 part 'appointments_event.dart';
 part 'appointments_state.dart';
 
@@ -17,9 +16,7 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
   void _onLoadAppointments(LoadAppointments event, Emitter<AppointmentsState> emit) async {
     try {
       emit(AppointmentsLoading());
-
       await Future.delayed(const Duration(milliseconds: 500));
-
       if (_appointments.isEmpty) {
         emit(const AppointmentsLoaded(appointments: []));
       } else {
@@ -34,9 +31,7 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
     try {
       if (state is AppointmentsLoaded) {
         final currentState = state as AppointmentsLoaded;
-
         _appointments.add(event.appointment);
-
         emit(AppointmentsLoaded(appointments: List.from(_appointments)));
       }
     } catch (e) {
@@ -48,12 +43,9 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
     try {
       if (state is AppointmentsLoaded) {
         final currentState = state as AppointmentsLoaded;
-
         final index = _appointments.indexWhere((appt) => appt['id'] == event.appointment['id']);
-
         if (index != -1) {
           _appointments[index] = event.appointment;
-
           emit(AppointmentsLoaded(appointments: List.from(_appointments)));
         }
       }
@@ -66,9 +58,7 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
     try {
       if (state is AppointmentsLoaded) {
         final currentState = state as AppointmentsLoaded;
-
         _appointments.removeWhere((appt) => appt['id'] == event.appointmentId);
-
         emit(AppointmentsLoaded(appointments: List.from(_appointments)));
       }
     } catch (e) {
