@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_project1/features/profile/bloc/profile_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_project1/features/appointments/bloc/appointments_bloc.dart';
 import 'package:flutter_project1/features/auth/bloc/auth_bloc.dart';
@@ -36,6 +37,9 @@ class CosmetologyApp extends StatelessWidget {
         BlocProvider<AppointmentsBloc>(
           create: (context) => AppointmentsBloc()..add(LoadAppointments()),
         ),
+        BlocProvider<ProfileBloc>(
+          create: (context) => ProfileBloc(),
+        )
       ],
       child: MaterialApp.router(
         title: 'Салон Красоты "BeautyClinic"',
