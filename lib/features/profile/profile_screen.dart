@@ -7,9 +7,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProfileBloc()..add(LoadProfile()),
-      child: Scaffold(
+    return Scaffold(
         body: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
             if (state is ProfileLoading) {
@@ -54,20 +52,26 @@ class ProfileScreen extends StatelessWidget {
             } else if (state is ProfileLoaded) {
               return _buildProfileContent(context, state.profile);
             } else {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text('Загрузка профиля...'),
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 16),
+                    const Text('Загрузка профиля...'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<ProfileBloc>().add(LoadProfile());
+                      },
+                      child: const Text('Загрузить профиль'),
+                    ),
                   ],
                 ),
               );
             }
           },
         ),
-      ),
     );
   }
 
@@ -510,7 +514,11 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    context.read<ProfileBloc>().add(UpdateProfile(
+                      specialties: specialties,
+                    ));
                     Navigator.pop(context);
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Специализации обновлены'),

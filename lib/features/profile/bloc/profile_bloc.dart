@@ -8,6 +8,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(ProfileInitial()) {
     on<LoadProfile>(_onLoadProfile);
     on<UpdateProfile>(_onUpdateProfile);
+    on<UpdateSpecialties>(_onUpdateSpecialties);
     on<UpdateProfileImage>(_onUpdateProfileImage);
   }
 
@@ -48,6 +49,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         phone: event.phone ?? currentState.profile.phone,
         email: event.email ?? currentState.profile.email,
         schedule: event.schedule ?? currentState.profile.schedule,
+        specialties: event.specialties ?? currentState.profile.specialties,
       );
       emit(ProfileLoaded(profile: updatedProfile));
     }
@@ -59,6 +61,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       final updatedProfile = currentState.profile.copyWith(
         avatarUrl: event.imageUrl,
       );
+      emit(ProfileLoaded(profile: updatedProfile));
+    }
+  }
+
+  void _onUpdateSpecialties(UpdateSpecialties event, Emitter<ProfileState> emit) {
+    if (state is ProfileLoaded) {
+      final currentState = state as ProfileLoaded;
+      final updatedProfile = currentState.profile.copyWith(
+        specialties: event.specialties,
+      );
+
       emit(ProfileLoaded(profile: updatedProfile));
     }
   }

@@ -42,8 +42,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       );
 
       emit(SettingsLoaded(settings: updatedSettings));
-
-      print('Тема изменена: ${event.isDarkTheme ? "Темная" : "Светлая"}');
     }
   }
 
@@ -55,8 +53,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       );
 
       emit(SettingsLoaded(settings: updatedSettings));
-
-      print('Уведомления: ${event.enabled ? "Включены" : "Выключены"}');
     }
   }
 
@@ -68,8 +64,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       );
 
       emit(SettingsLoaded(settings: updatedSettings));
-
-      print('Биометрическая аутентификация: ${event.enabled ? "Включена" : "Выключена"}');
     }
   }
 
@@ -81,8 +75,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       );
 
       emit(SettingsLoaded(settings: updatedSettings));
-
-      print('Язык изменен на: ${event.language}');
     }
   }
 }

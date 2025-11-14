@@ -46,16 +46,53 @@ class CosmetologyApp extends StatelessWidget {
           create: (context) => ServicesBloc(),
         ),
         BlocProvider<SettingsBloc>(
-          create: (context) => SettingsBloc(),
+          create: (context) => SettingsBloc()..add(LoadSettings()),
         ),
       ],
-      child: MaterialApp.router(
-        title: 'Салон Красоты "BeautyClinic"',
-        theme: ThemeData(
-          primarySwatch: Colors.pink,
-          fontFamily: 'Roboto',
-        ),
-        routerConfig: _router,
+      child: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, state) {
+          final isDarkTheme = state is SettingsLoaded ? state.settings.isDarkTheme : false;
+
+          return MaterialApp.router(
+            title: 'Салон Красоты "BeautyClinic"',
+            theme: _buildLightTheme(),
+            darkTheme: _buildDarkTheme(),
+            themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+            routerConfig: _router,
+          );
+        },
+      ),
+    );
+  }
+
+  ThemeData _buildLightTheme() {
+    return ThemeData(
+      primarySwatch: Colors.pink,
+      fontFamily: 'Roboto',
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: Colors.pink[50],
+      cardColor: Colors.white,
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.pink[100],
+        elevation: 2,
+      ),
+    );
+  }
+
+  ThemeData _buildDarkTheme() {
+    return ThemeData(
+      primarySwatch: Colors.pink,
+      fontFamily: 'Roboto',
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: const Color(0xFF121212),
+      cardColor: const Color(0xFF1E1E1E),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xFF1A1A1A),
+        elevation: 2,
+      ),
+      dialogBackgroundColor: const Color(0xFF1E1E1E),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: Color(0xFF1A1A1A),
       ),
     );
   }

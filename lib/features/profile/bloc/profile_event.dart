@@ -15,6 +15,7 @@ class UpdateProfile extends ProfileEvent {
   final String? phone;
   final String? email;
   final String? schedule;
+  final List<String>? specialties;
 
   const UpdateProfile({
     this.name,
@@ -22,6 +23,7 @@ class UpdateProfile extends ProfileEvent {
     this.phone,
     this.email,
     this.schedule,
+    this.specialties,
   });
 
   @override
@@ -31,6 +33,7 @@ class UpdateProfile extends ProfileEvent {
     if (phone != null) phone!,
     if (email != null) email!,
     if (schedule != null) schedule!,
+    if (specialties != null) specialties!,
   ];
 }
 
@@ -39,4 +42,13 @@ class UpdateProfileImage extends ProfileEvent {
   const UpdateProfileImage(this.imageUrl);
   @override
   List<Object> get props => [imageUrl];
+}
+
+class UpdateSpecialties extends ProfileEvent {
+  final List<String> specialties;
+
+  const UpdateSpecialties(this.specialties);
+
+  @override
+  List<Object> get props => [specialties];
 }

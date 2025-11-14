@@ -7,41 +7,54 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SettingsBloc()..add(LoadSettings()),
-      child: Scaffold(
-        body: BlocBuilder<SettingsBloc, SettingsState>(
-          builder: (context, state) {
-            if (state is SettingsLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is SettingsError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                    const SizedBox(height: 16),
-                    Text(
-                      state.message,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<SettingsBloc>().add(LoadSettings());
-                      },
-                      child: const Text('Повторить'),
-                    ),
-                  ],
-                ),
-              );
-            } else if (state is SettingsLoaded) {
-              return _buildSettingsContent(context, state.settings);
-            } else {
-              return const Center(child: Text('Загрузка настроек...'));
-            }
-          },
-        ),
+    return Scaffold(
+      body: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, state) {
+          if (state is SettingsLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is SettingsError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    state.message,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<SettingsBloc>().add(LoadSettings());
+                    },
+                    child: const Text('Повторить'),
+                  ),
+                ],
+              ),
+            );
+          } else if (state is SettingsLoaded) {
+            return _buildSettingsContent(context, state.settings);
+          } else {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  const Text('Загрузка настроек...'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<SettingsBloc>().add(LoadSettings());
+                    },
+                    child: const Text('Загрузить настройки'),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
       ),
     );
   }
@@ -73,6 +86,13 @@ class SettingsScreen extends StatelessWidget {
                         value: settings.isDarkTheme,
                         onChanged: (value) {
                           context.read<SettingsBloc>().add(UpdateTheme(value));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(value ? 'Темная тема включена' : 'Светлая тема включена'),
+                              backgroundColor: Colors.green,
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
                         },
                       ),
                     ],
@@ -106,6 +126,13 @@ class SettingsScreen extends StatelessWidget {
                         value: settings.notificationsEnabled,
                         onChanged: (value) {
                           context.read<SettingsBloc>().add(UpdateNotifications(value));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(value ? 'Уведомления включены' : 'Уведомления выключены'),
+                              backgroundColor: Colors.green,
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
                         },
                       ),
                     ],
@@ -139,6 +166,13 @@ class SettingsScreen extends StatelessWidget {
                         value: settings.biometricAuth,
                         onChanged: (value) {
                           context.read<SettingsBloc>().add(UpdateBiometricAuth(value));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(value ? 'Биометрия включена' : 'Биометрия выключена'),
+                              backgroundColor: Colors.green,
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
                         },
                       ),
                     ],
@@ -155,36 +189,34 @@ class SettingsScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  _buildSettingsItem(
-                    context,
-                    'Язык',
-                    settings.language,
-                    Icons.language,
-                        () => _showLanguageDialog(context, settings),
+                  ListTile(
+                    leading: const Icon(Icons.language),
+                    title: const Text('Язык'),
+                    subtitle: Text(settings.language),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () => _showSimpleLanguageDialog(context),
                   ),
                   const Divider(),
-                  _buildSettingsItem(
-                    context,
-                    'Политика конфиденциальности',
-                    '',
-                    Icons.privacy_tip,
-                        () => _showPrivacyPolicy(context),
+                  ListTile(
+                    leading: const Icon(Icons.privacy_tip),
+                    title: const Text('Политика конфиденциальности'),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () => _showPrivacyPolicy(context),
                   ),
                   const Divider(),
-                  _buildSettingsItem(
-                    context,
-                    'Условия использования',
-                    '',
-                    Icons.description,
-                        () => _showTermsOfUse(context),
+                  ListTile(
+                    leading: const Icon(Icons.description),
+                    title: const Text('Условия использования'),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () => _showTermsOfUse(context),
                   ),
                   const Divider(),
-                  _buildSettingsItem(
-                    context,
-                    'О приложении',
-                    'Версия ${settings.appVersion}',
-                    Icons.info,
-                        () => _showAboutDialog(context, settings),
+                  ListTile(
+                    leading: const Icon(Icons.info),
+                    title: const Text('О приложении'),
+                    subtitle: Text('Версия ${settings.appVersion}'),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () => _showAboutDialog(context, settings),
                   ),
                 ],
               ),
@@ -213,59 +245,30 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingsItem(
-      BuildContext context,
-      String title,
-      String subtitle,
-      IconData icon,
-      VoidCallback onTap,
-      ) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
-      trailing: const Icon(Icons.arrow_forward_ios),
-      onTap: onTap,
-    );
-  }
-
-  void _showLanguageDialog(BuildContext context, AppSettings settings) {
+  void _showSimpleLanguageDialog(BuildContext context) {
     final languages = ['Русский', 'English', 'Español', 'Deutsch'];
 
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
+        return SimpleDialog(
           title: const Text('Выберите язык'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: languages.map((language) =>
-                RadioListTile<String>(
-                  title: Text(language),
-                  value: language,
-                  groupValue: settings.language,
-                  onChanged: (value) {
-                    if (value != null) {
-                      context.read<SettingsBloc>().add(UpdateLanguage(value));
-                      Navigator.pop(context);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Язык изменен на $value'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    }
-                  },
-                )
-            ).toList(),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена'),
-            ),
-          ],
+          children: languages.map((language) =>
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.read<SettingsBloc>().add(UpdateLanguage(language));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Язык изменен на $language'),
+                      backgroundColor: Colors.green,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+                child: Text(language),
+              )
+          ).toList(),
         );
       },
     );
@@ -369,8 +372,9 @@ class SettingsScreen extends StatelessWidget {
               context.read<SettingsBloc>().add(LoadSettings());
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Настройки сброшены'),
+                  content: Text('Настройки сброшены к значениям по умолчанию'),
                   backgroundColor: Colors.green,
+                  duration: const Duration(seconds: 2),
                 ),
               );
             },
@@ -383,6 +387,6 @@ class SettingsScreen extends StatelessWidget {
   }
 
   String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
+    return '${date.day}.${date.month}.${date.year}';
   }
 }
