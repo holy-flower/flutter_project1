@@ -266,14 +266,12 @@ class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
   List<InventoryItem> _applyFilters(List<InventoryItem> items, String filter, String searchQuery) {
     List<InventoryItem> filteredItems = items;
 
-    // Применяем поиск
     if (searchQuery.isNotEmpty) {
       filteredItems = filteredItems.where((item) =>
       item.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
           item.category.toLowerCase().contains(searchQuery.toLowerCase())).toList();
     }
 
-    // Применяем фильтр по категории
     if (filter != 'all') {
       filteredItems = filteredItems.where((item) => item.category == filter).toList();
     }

@@ -17,7 +17,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
   @override
   void initState() {
     super.initState();
-    // Загружаем инвентарь при инициализации
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<InventoryBloc>().add(LoadInventory());
     });
@@ -34,7 +33,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
     return Scaffold(
       body: BlocConsumer<InventoryBloc, InventoryState>(
         listener: (context, state) {
-          // Обработка ошибок или других состояний
           if (state is InventoryError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
@@ -82,7 +80,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
   Widget _buildLoadedState(BuildContext context, InventoryLoaded state) {
     return Column(
       children: [
-        // Статистика склада
         Container(
           padding: const EdgeInsets.all(16),
           color: Colors.pink[50],
@@ -96,7 +93,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
           ),
         ),
 
-        // Поиск
         Padding(
           padding: const EdgeInsets.all(16),
           child: TextField(
@@ -114,7 +110,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
           ),
         ),
 
-        // Фильтры по категориям
         SizedBox(
           height: 50,
           child: ListView(
@@ -129,7 +124,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
           ),
         ),
 
-        // Список материалов
         Expanded(
           child: state.filteredItems.isEmpty
               ? const Center(
@@ -198,7 +192,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Заголовок с статусами
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -253,7 +246,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
             const SizedBox(height: 8),
 
-            // Категория и поставщик
             Row(
               children: [
                 Container(
@@ -279,7 +271,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
             const SizedBox(height: 12),
 
-            // Информация о запасах
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -320,7 +311,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
             const SizedBox(height: 8),
 
-            // Сроки
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -340,7 +330,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
             const SizedBox(height: 12),
 
-            // Кнопки действий
             Row(
               children: [
                 Expanded(
@@ -375,7 +364,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
     final InventoryBloc bloc = context.read<InventoryBloc>();
     final InventoryItem newItem = InventoryItem.empty();
 
-    // Контроллеры для формы
     final TextEditingController nameController = TextEditingController();
     final TextEditingController categoryController = TextEditingController(text: 'Филлеры');
     final TextEditingController currentStockController = TextEditingController(text: '0');
@@ -387,7 +375,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
     DateTime selectedExpiryDate = newItem.expiryDate;
     DateTime selectedLastRestock = newItem.lastRestock;
 
-    // Доступные категории
     final List<String> categories = [
       'Филлеры',
       'Нейромодуляторы',
@@ -398,7 +385,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
       'Другое'
     ];
 
-    // Доступные единицы измерения
     final List<String> units = ['шт', 'флакон', 'туба', 'набор', 'упаковка', 'мл', 'гр'];
 
     showDialog(
@@ -420,7 +406,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Категория
                   DropdownButtonFormField<String>(
                     value: categories.first,
                     decoration: const InputDecoration(
@@ -439,7 +424,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Поставщик
                   TextField(
                     controller: supplierController,
                     decoration: const InputDecoration(
@@ -449,7 +433,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Единица измерения
                   DropdownButtonFormField<String>(
                     value: units.first,
                     decoration: const InputDecoration(
@@ -468,7 +451,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Запасы
                   Row(
                     children: [
                       Expanded(
@@ -502,7 +484,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Стоимость
                   TextField(
                     controller: costController,
                     decoration: const InputDecoration(
@@ -516,7 +497,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Дата последней поставки
                   ListTile(
                     title: const Text('Дата последней поставки'),
                     subtitle: Text(_formatDate(selectedLastRestock)),
@@ -536,7 +516,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     },
                   ),
 
-                  // Дата окончания срока годности
                   ListTile(
                     title: const Text('Срок годности до'),
                     subtitle: Text(_formatDate(selectedExpiryDate)),
@@ -637,7 +616,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
       expiryDate: expiryDate,
     );
 
-    // Диспатчим событие добавления в BLoC
     context.read<InventoryBloc>().add(AddInventoryItem(newItem));
 
     ScaffoldMessenger.of(context).showSnackBar(

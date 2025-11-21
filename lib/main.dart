@@ -8,7 +8,11 @@ import 'features/appointments/appointments_screen.dart';
 import 'features/auth/auth_screen.dart';
 import 'features/facial_care/screens/add_facial_service_screen.dart';
 import 'features/body_care/screens/add_body_service_screen.dart';
+import 'features/finance/bloc/finance_bloc.dart';
+import 'features/finance/finance_screen.dart';
 import 'features/hair_removal/screens/add_hair_removal_service_screen.dart';
+import 'features/inventory/bloc/inventory_bloc.dart';
+import 'features/inventory/inventory_screen.dart';
 import 'features/massage/screens/add_massage_service_screen.dart';
 import 'features/profile/profile_screen.dart';
 import 'features/services/bloc/services_bloc.dart';
@@ -47,6 +51,12 @@ class CosmetologyApp extends StatelessWidget {
         ),
         BlocProvider<SettingsBloc>(
           create: (context) => SettingsBloc()..add(LoadSettings()),
+        ),
+        BlocProvider<FinanceBloc>(
+          create: (context) => FinanceBloc()..add(LoadFinanceData()),
+        ),
+        BlocProvider<InventoryBloc>(
+          create: (context) => InventoryBloc()..add(LoadInventory()),
         ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
@@ -129,6 +139,18 @@ final GoRouter _router = GoRouter(
           path: '/appointments',
           pageBuilder: (context, state) => MaterialPage(
             child: AppointmentsScreen(),
+          ),
+        ),
+        GoRoute(
+          path: '/inventory',
+          pageBuilder: (context, state) => MaterialPage(
+            child: InventoryScreen(),
+          ),
+        ),
+        GoRoute(
+          path: '/finance',
+          pageBuilder: (context, state) => MaterialPage(
+            child: FinanceScreen(),
           ),
         ),
         GoRoute(
@@ -260,6 +282,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     '/profile',
     '/services',
     '/appointments',
+    '/inventory',
+    '/finance',
     '/settings',
   ];
 
@@ -267,10 +291,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     'Профиль',
     'Услуги',
     'Записи',
+    'Склад',
+    'Финансы',
     'Настройки',
   ];
 
   int _getCurrentIndex(String location) {
+    // Если путь начинается с /services или с конкретной услуги, считаем что это услуги
     if (location.startsWith('/services') ||
         location.startsWith('/facial_care') ||
         location.startsWith('/body_care') ||
@@ -278,7 +305,17 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         location.startsWith('/massage') ||
         location.startsWith('/spa') ||
         location.startsWith('/add_')) {
-      return 1;
+      return 1; // Индекс для услуг
+    }
+
+    // Если путь связан со складом
+    if (location.startsWith('/inventory')) {
+      return 3; // Индекс для склада
+    }
+
+    // Если путь связан с финансами
+    if (location.startsWith('/finance')) {
+      return 4; // Индекс для финансов
     }
 
     for (int i = 0; i < _routes.length; i++) {
@@ -302,6 +339,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       return 'Массаж';
     } else if (location.startsWith('/spa') || location == '/add_spa_service') {
       return 'SPA-программы';
+    } else if (location.startsWith('/inventory')) {
+      return 'Склад и материалы';
+    } else if (location.startsWith('/finance')) {
+      return 'Финансы';
     }
 
     return _screenTitles[index];
@@ -356,7 +397,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(_getScreenTitle(currentLocation)),
-          backgroundColor: Colors.pink[100],
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           elevation: 2,
           automaticallyImplyLeading: false,
           actions: [
@@ -390,6 +431,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today),
               label: 'Записи',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.inventory_2),
+              label: 'Склад',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.attach_money),
+              label: 'Финансы',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),

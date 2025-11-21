@@ -51,7 +51,6 @@ class InventoryItem extends Equatable {
     );
   }
 
-  // Конструктор для создания пустого элемента
   factory InventoryItem.empty() {
     return InventoryItem(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
