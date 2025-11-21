@@ -1,77 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'bloc/profile_bloc.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileBloc>().add(LoadProfile());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BlocBuilder<ProfileBloc, ProfileState>(
-          builder: (context, state) {
-            if (state is ProfileLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is ProfileError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Ошибка загрузки',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[700],
-                      ),
+      body: BlocConsumer<ProfileBloc, ProfileState>(
+        listener: (context, state) {
+          if (state is ProfileError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is ProfileLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is ProfileError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Ошибка загрузки',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      state.message,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    state.message,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
                     ),
-                    const SizedBox(height: 24),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<ProfileBloc>().add(LoadProfile());
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pink,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text('Повторить'),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<ProfileBloc>().add(LoadProfile());
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pink,
+                      foregroundColor: Colors.white,
                     ),
-                  ],
-                ),
-              );
-            } else if (state is ProfileLoaded) {
-              return _buildProfileContent(context, state.profile);
-            } else {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const CircularProgressIndicator(),
-                    const SizedBox(height: 16),
-                    const Text('Загрузка профиля...'),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<ProfileBloc>().add(LoadProfile());
-                      },
-                      child: const Text('Загрузить профиль'),
-                    ),
-                  ],
-                ),
-              );
-            }
-          },
-        ),
+                    child: const Text('Повторить'),
+                  ),
+                ],
+              ),
+            );
+          } else if (state is ProfileLoaded) {
+            return _buildProfileContent(context, state.profile);
+          } else {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Загрузка профиля...'),
+                ],
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -225,18 +239,47 @@ class ProfileScreen extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          Row(
+          Column(
             children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () => _showEditProfileDialog(context, profile),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => _showEditProfileDialog(context, profile),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.pink,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Text('Редактировать профиль'),
+                    ),
                   ),
-                  child: const Text('Редактировать профиль'),
-                ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        context.push('/settings');
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.pink,
+                        side: const BorderSide(color: Colors.pink),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.settings, size: 20),
+                          SizedBox(width: 8),
+                          Text('Настройки приложения'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

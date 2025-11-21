@@ -41,7 +41,6 @@ class FinancialRecord extends Equatable {
     );
   }
 
-  // Конструктор для создания пустой записи
   factory FinancialRecord.empty() {
     return FinancialRecord(
       id: DateTime.now().millisecondsSinceEpoch.toString(),

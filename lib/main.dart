@@ -284,7 +284,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     '/appointments',
     '/inventory',
     '/finance',
-    '/settings',
   ];
 
   final List<String> _screenTitles = [
@@ -293,11 +292,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     'Записи',
     'Склад',
     'Финансы',
-    'Настройки',
   ];
 
   int _getCurrentIndex(String location) {
-    // Если путь начинается с /services или с конкретной услуги, считаем что это услуги
     if (location.startsWith('/services') ||
         location.startsWith('/facial_care') ||
         location.startsWith('/body_care') ||
@@ -305,17 +302,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         location.startsWith('/massage') ||
         location.startsWith('/spa') ||
         location.startsWith('/add_')) {
-      return 1; // Индекс для услуг
+      return 1;
     }
 
-    // Если путь связан со складом
     if (location.startsWith('/inventory')) {
-      return 3; // Индекс для склада
+      return 3;
     }
 
-    // Если путь связан с финансами
     if (location.startsWith('/finance')) {
-      return 4; // Индекс для финансов
+      return 4;
+    }
+
+    if (location.startsWith('/settings')) {
+      return 0;
     }
 
     for (int i = 0; i < _routes.length; i++) {
@@ -343,6 +342,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       return 'Склад и материалы';
     } else if (location.startsWith('/finance')) {
       return 'Финансы';
+    } else if (location.startsWith('/settings')) {
+      return 'Настройки';
     }
 
     return _screenTitles[index];
@@ -439,10 +440,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.attach_money),
               label: 'Финансы',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Настройки',
             ),
           ],
         ),

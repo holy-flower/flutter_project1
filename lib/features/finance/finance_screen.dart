@@ -16,7 +16,6 @@ class _FinanceScreenState extends State<FinanceScreen> {
   @override
   void initState() {
     super.initState();
-    // Загружаем данные при инициализации
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<FinanceBloc>().add(LoadFinanceData());
     });
@@ -85,7 +84,6 @@ class _FinanceScreenState extends State<FinanceScreen> {
   Widget _buildFinanceContent(BuildContext context, FinanceLoaded state) {
     return Column(
       children: [
-        // Периоды
         Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -99,7 +97,6 @@ class _FinanceScreenState extends State<FinanceScreen> {
           ),
         ),
 
-        // Финансовая статистика
         Container(
           padding: const EdgeInsets.all(16),
           color: Colors.pink[50],
@@ -128,7 +125,6 @@ class _FinanceScreenState extends State<FinanceScreen> {
           ),
         ),
 
-        // Мини-статистика
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
@@ -349,7 +345,6 @@ class _FinanceScreenState extends State<FinanceScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Тип операции
                   Row(
                     children: [
                       Expanded(
@@ -421,7 +416,6 @@ class _FinanceScreenState extends State<FinanceScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Дата
                   ListTile(
                     title: const Text('Дата операции'),
                     subtitle: Text(_formatDate(selectedDate)),

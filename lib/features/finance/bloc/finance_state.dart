@@ -37,7 +37,6 @@ class FinanceLoaded extends FinanceState {
 
   int get profit => totalIncome - totalExpenses;
 
-  // Статистика по категориям
   Map<String, int> get incomeByService {
     final incomeRecords = currentRecords.where((r) => r.type == FinancialType.income);
     final Map<String, int> result = {};
