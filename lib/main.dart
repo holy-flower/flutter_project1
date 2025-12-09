@@ -1,32 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_project1/features/profile/bloc/profile_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_project1/features/appointments/bloc/appointments_bloc.dart';
-import 'package:flutter_project1/features/auth/bloc/auth_bloc.dart';
-import 'features/appointments/appointments_screen.dart';
-import 'features/auth/auth_screen.dart';
-import 'features/facial_care/screens/add_facial_service_screen.dart';
-import 'features/body_care/screens/add_body_service_screen.dart';
-import 'features/finance/bloc/finance_bloc.dart';
-import 'features/finance/finance_screen.dart';
-import 'features/hair_removal/screens/add_hair_removal_service_screen.dart';
-import 'features/inventory/bloc/inventory_bloc.dart';
-import 'features/inventory/inventory_screen.dart';
-import 'features/massage/screens/add_massage_service_screen.dart';
-import 'features/profile/profile_screen.dart';
-import 'features/services/bloc/services_bloc.dart';
-import 'features/settings/bloc/settings_bloc.dart';
-import 'features/settings/settings_screen.dart';
-import 'features/services/services_screen.dart';
-import 'features/facial_care/facial_care_feature.dart' as facial_care;
-import 'features/body_care/body_care_feature.dart' as body_care;
-import 'features/hair_removal/hair_removal_feature.dart' as hair_removal;
-import 'features/massage/massage_feature.dart' as massage;
-import 'features/spa/screens/add_spa_service_screen.dart';
-import 'features/spa/spa_feature.dart' as spa;
+import 'core/di/injection_container.dart' as di;
+import 'ui/features/auth/bloc/auth_bloc.dart';
+import 'ui/features/appointments/bloc/appointments_bloc.dart';
+import 'ui/features/profile/bloc/profile_bloc.dart';
+import 'ui/features/finance/bloc/finance_bloc.dart';
+import 'ui/features/inventory/bloc/inventory_bloc.dart';
+import 'ui/features/settings/bloc/settings_bloc.dart';
+import 'ui/features/services/bloc/services_bloc.dart';
+import 'ui/features/auth/auth_screen.dart';
+import 'ui/features/appointments/appointments_screen.dart';
+import 'ui/features/finance/finance_screen.dart';
+import 'ui/features/inventory/inventory_screen.dart';
+import 'ui/features/profile/profile_screen.dart';
+import 'ui/features/settings/settings_screen.dart';
+import 'ui/features/services/services_screen.dart';
+import 'ui/features/facial_care/screens/facial_care_screen.dart';
+import 'ui/features/facial_care/screens/add_facial_service_screen.dart';
+import 'ui/features/body_care/screens/body_care_screen.dart';
+import 'ui/features/body_care/screens/add_body_service_screen.dart';
+import 'ui/features/hair_removal/screens/hair_removal_screen.dart';
+import 'ui/features/hair_removal/screens/add_hair_removal_service_screen.dart';
+import 'ui/features/massage/screens/massage_screen.dart';
+import 'ui/features/massage/screens/add_massage_service_screen.dart';
+import 'ui/features/spa/screens/spa_screen.dart';
+import 'ui/features/spa/screens/add_spa_service_screen.dart';
+import 'ui/features/facial_care/bloc/facial_care_bloc.dart';
+import 'ui/features/body_care/bloc/body_care_bloc.dart';
+import 'ui/features/hair_removal/bloc/hair_removal_bloc.dart';
+import 'ui/features/massage/bloc/massage_bloc.dart';
+import 'ui/features/spa/bloc/spa_bloc.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
   runApp(const CosmetologyApp());
 }
 
@@ -38,25 +46,40 @@ class CosmetologyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(),
+          create: (context) => di.getIt<AuthBloc>(),
         ),
         BlocProvider<AppointmentsBloc>(
-          create: (context) => AppointmentsBloc()..add(LoadAppointments()),
+          create: (context) => di.getIt<AppointmentsBloc>()..add(LoadAppointments()),
         ),
         BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(),
+          create: (context) => di.getIt<ProfileBloc>(),
         ),
         BlocProvider<ServicesBloc>(
-          create: (context) => ServicesBloc(),
+          create: (context) => di.getIt<ServicesBloc>()..add(LoadServices()),
         ),
         BlocProvider<SettingsBloc>(
-          create: (context) => SettingsBloc()..add(LoadSettings()),
+          create: (context) => di.getIt<SettingsBloc>()..add(LoadSettings()),
         ),
         BlocProvider<FinanceBloc>(
-          create: (context) => FinanceBloc()..add(LoadFinanceData()),
+          create: (context) => di.getIt<FinanceBloc>()..add(LoadFinanceData()),
         ),
         BlocProvider<InventoryBloc>(
-          create: (context) => InventoryBloc()..add(LoadInventory()),
+          create: (context) => di.getIt<InventoryBloc>()..add(LoadInventory()),
+        ),
+        BlocProvider<FacialCareBloc>(
+          create: (context) => di.getIt<FacialCareBloc>()..add(LoadFacialServices()),
+        ),
+        BlocProvider<BodyCareBloc>(
+          create: (context) => di.getIt<BodyCareBloc>()..add(LoadBodyServices()),
+        ),
+        BlocProvider<HairRemovalBloc>(
+          create: (context) => di.getIt<HairRemovalBloc>()..add(LoadHairRemovalServices()),
+        ),
+        BlocProvider<MassageBloc>(
+          create: (context) => di.getIt<MassageBloc>()..add(LoadMassageServices()),
+        ),
+        BlocProvider<SpaBloc>(
+          create: (context) => di.getIt<SpaBloc>()..add(LoadSpaServices()),
         ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
@@ -162,104 +185,64 @@ final GoRouter _router = GoRouter(
 
         GoRoute(
           path: '/facial_care',
-          pageBuilder: (context, state) => MaterialPage(
-            child: state.extra != null
-                ? facial_care.FacialCareContainer.withServices(state.extra as List<facial_care.FacialService>)
-                : const facial_care.FacialCareContainer(),
+          pageBuilder: (context, state) => const MaterialPage(
+            child: FacialCareScreen(),
           ),
         ),
         GoRoute(
           path: '/body_care',
-          pageBuilder: (context, state) => MaterialPage(
-            child: state.extra != null
-                ? body_care.BodyCareContainer.withServices(state.extra as List<body_care.BodyService>)
-                : const body_care.BodyCareContainer(),
+          pageBuilder: (context, state) => const MaterialPage(
+            child: BodyCareScreen(),
           ),
         ),
         GoRoute(
           path: '/hair_removal',
-          pageBuilder: (context, state) => MaterialPage(
-            child: state.extra != null
-                ? hair_removal.HairRemovalContainer.withServices(state.extra as List<hair_removal.HairRemovalService>)
-                : const hair_removal.HairRemovalContainer(),
+          pageBuilder: (context, state) => const MaterialPage(
+            child: HairRemovalScreen(),
           ),
         ),
         GoRoute(
           path: '/massage',
-          pageBuilder: (context, state) => MaterialPage(
-            child: state.extra != null
-                ? massage.MassageContainer.withMassages(state.extra as List<massage.MassageService>)
-                : const massage.MassageContainer(),
+          pageBuilder: (context, state) => const MaterialPage(
+            child: MassageScreen(),
           ),
         ),
         GoRoute(
           path: '/spa',
-          pageBuilder: (context, state) => MaterialPage(
-            child: state.extra != null
-                ? spa.SpaContainer.withPrograms(state.extra as List<spa.SpaService>)
-                : const spa.SpaContainer(),
+          pageBuilder: (context, state) => const MaterialPage(
+            child: SpaScreen(),
           ),
         ),
 
         GoRoute(
           path: '/add_facial_service',
-          pageBuilder: (context, state) {
-            final extra = state.extra as Map<String, dynamic>?;
-            return MaterialPage(
-              child: AddFacialServiceScreen(
-                onServiceAdded: extra?['onServiceAdded'] as Function(facial_care.FacialService),
-                currentServices: extra?['currentServices'] as List<facial_care.FacialService>? ?? [],
-              ),
-            );
-          },
+          pageBuilder: (context, state) => const MaterialPage(
+            child: AddFacialServiceScreen(),
+          ),
         ),
         GoRoute(
           path: '/add_body_service',
-          pageBuilder: (context, state) {
-            final extra = state.extra as Map<String, dynamic>?;
-            return MaterialPage(
-              child: AddBodyServiceScreen(
-                onServiceAdded: extra?['onServiceAdded'] as Function(body_care.BodyService),
-                currentServices: extra?['currentServices'] as List<body_care.BodyService>? ?? [],
-              ),
-            );
-          },
+          pageBuilder: (context, state) => const MaterialPage(
+            child: AddBodyServiceScreen(),
+          ),
         ),
         GoRoute(
           path: '/add_hair_removal_service',
-          pageBuilder: (context, state) {
-            final extra = state.extra as Map<String, dynamic>?;
-            return MaterialPage(
-              child: AddHairRemovalServiceScreen(
-                onServiceAdded: extra?['onServiceAdded'] as Function(hair_removal.HairRemovalService),
-                currentServices: extra?['currentServices'] as List<hair_removal.HairRemovalService>? ?? [],
-              ),
-            );
-          },
+          pageBuilder: (context, state) => const MaterialPage(
+            child: AddHairRemovalServiceScreen(),
+          ),
         ),
         GoRoute(
           path: '/add_massage_service',
-          pageBuilder: (context, state) {
-            final extra = state.extra as Map<String, dynamic>?;
-            return MaterialPage(
-              child: AddMassageServiceScreen(
-                onMassageAdded: extra?['onServiceAdded'] as Function(massage.MassageService),
-                currentMassages: extra?['currentServices'] as List<massage.MassageService>? ?? [],
-              ),
-            );
-          },
+          pageBuilder: (context, state) => const MaterialPage(
+            child: AddMassageServiceScreen(),
+          ),
         ),
         GoRoute(
           path: '/add_spa_service',
-          pageBuilder: (context, state) {
-            final extra = state.extra as Map<String, dynamic>?;
-            return MaterialPage(
-              child: AddSpaServiceScreen(
-                onSpaServiceAdded: extra?['onServiceAdded'] as Function(spa.SpaService),
-                currentPrograms: extra?['currentServices'] as List<spa.SpaService>? ?? [],
-              ),
-            );
-          },
+          pageBuilder: (context, state) => const MaterialPage(
+            child: AddSpaServiceScreen(),
+          ),
         ),
       ],
     ),
