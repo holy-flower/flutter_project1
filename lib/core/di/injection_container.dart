@@ -1,11 +1,14 @@
 import 'package:get_it/get_it.dart';
 import '../../data/datasources/api/auth_api_datasource.dart';
-import '../../data/datasources/api/appointments_api_datasource.dart';
-import '../../data/datasources/api/finance_api_datasource.dart';
-import '../../data/datasources/api/inventory_api_datasource.dart';
 import '../../data/datasources/api/profile_api_datasource.dart';
-import '../../data/datasources/api/settings_api_datasource.dart';
 import '../../data/datasources/api/services_api_datasource.dart';
+import '../../data/datasources/local/settings_local_datasource.dart';
+import '../../data/datasources/local/auth_local_datasource.dart';
+import '../../data/datasources/local/app_database.dart';
+import '../../data/datasources/local/appointments_local_datasource.dart';
+import '../../data/datasources/local/inventory_local_datasource.dart';
+import '../../data/datasources/local/finance_local_datasource.dart';
+import '../../data/datasources/local/services_local_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/repositories/appointments_repository_impl.dart';
 import '../../data/repositories/finance_repository_impl.dart';
@@ -23,6 +26,7 @@ import '../../domain/repositories/services_repository.dart';
 import '../../domain/usecases/auth/login_usecase.dart';
 import '../../domain/usecases/auth/register_usecase.dart';
 import '../../domain/usecases/auth/logout_usecase.dart';
+import '../../domain/usecases/auth/get_current_user_usecase.dart';
 import '../../domain/usecases/appointments/get_appointments_usecase.dart';
 import '../../domain/usecases/appointments/add_appointment_usecase.dart';
 import '../../domain/usecases/appointments/update_appointment_usecase.dart';
@@ -55,45 +59,72 @@ import '../../ui/features/hair_removal/bloc/hair_removal_bloc.dart';
 import '../../ui/features/massage/bloc/massage_bloc.dart';
 import '../../ui/features/spa/bloc/spa_bloc.dart';
 
+import '../../data/datasources/local/shared_preferences_service.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> init() async {
-  // Data Sources
+  // Initialize SharedPreferences
+  await SharedPreferencesService.init();
+  
+  // Database
+  getIt.registerLazySingleton<AppDatabase>(() => AppDatabase());
+
+  // Local Data Sources
+  getIt.registerLazySingleton<SettingsLocalDataSource>(
+    () => SettingsLocalDataSourceImpl(),
+  );
+  getIt.registerLazySingleton<AuthLocalDataSource>(
+    () => AuthLocalDataSourceImpl(),
+  );
+  getIt.registerLazySingleton<AppointmentsLocalDataSource>(
+    () => AppointmentsLocalDataSourceImpl(getIt<AppDatabase>()),
+  );
+  getIt.registerLazySingleton<InventoryLocalDataSource>(
+    () => InventoryLocalDataSourceImpl(getIt<AppDatabase>()),
+  );
+  getIt.registerLazySingleton<FinanceLocalDataSource>(
+    () => FinanceLocalDataSourceImpl(getIt<AppDatabase>()),
+  );
+  getIt.registerLazySingleton<ServicesLocalDataSource>(
+    () => ServicesLocalDataSourceImpl(getIt<AppDatabase>()),
+  );
+
+  // API Data Sources (для аутентификации)
   getIt.registerLazySingleton<AuthApiDataSource>(() => AuthApiDataSourceImpl());
-  getIt.registerLazySingleton<AppointmentsApiDataSource>(() => AppointmentsApiDataSourceImpl());
-  getIt.registerLazySingleton<FinanceApiDataSource>(() => FinanceApiDataSourceImpl());
-  getIt.registerLazySingleton<InventoryApiDataSource>(() => InventoryApiDataSourceImpl());
   getIt.registerLazySingleton<ProfileApiDataSource>(() => ProfileApiDataSourceImpl());
-  getIt.registerLazySingleton<SettingsApiDataSource>(() => SettingsApiDataSourceImpl());
-  getIt.registerLazySingleton<ServicesApiDataSource>(() => ServicesApiDataSourceImpl());
 
   // Repositories
   getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(getIt<AuthApiDataSource>()),
+    () => AuthRepositoryImpl(
+      getIt<AuthApiDataSource>(),
+      getIt<AuthLocalDataSource>(),
+    ),
   );
   getIt.registerLazySingleton<AppointmentsRepository>(
-    () => AppointmentsRepositoryImpl(getIt<AppointmentsApiDataSource>()),
+    () => AppointmentsRepositoryImpl(getIt<AppointmentsLocalDataSource>()),
   );
   getIt.registerLazySingleton<FinanceRepository>(
-    () => FinanceRepositoryImpl(getIt<FinanceApiDataSource>()),
+    () => FinanceRepositoryImpl(getIt<FinanceLocalDataSource>()),
   );
   getIt.registerLazySingleton<InventoryRepository>(
-    () => InventoryRepositoryImpl(getIt<InventoryApiDataSource>()),
+    () => InventoryRepositoryImpl(getIt<InventoryLocalDataSource>()),
   );
   getIt.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(getIt<ProfileApiDataSource>()),
   );
   getIt.registerLazySingleton<SettingsRepository>(
-    () => SettingsRepositoryImpl(getIt<SettingsApiDataSource>()),
+    () => SettingsRepositoryImpl(getIt<SettingsLocalDataSource>()),
   );
   getIt.registerLazySingleton<ServicesRepository>(
-    () => ServicesRepositoryImpl(getIt<ServicesApiDataSource>()),
+    () => ServicesRepositoryImpl(getIt<ServicesLocalDataSource>()),
   );
 
   // Use Cases
   getIt.registerLazySingleton(() => LoginUseCase(getIt<AuthRepository>()));
   getIt.registerLazySingleton(() => RegisterUseCase(getIt<AuthRepository>()));
   getIt.registerLazySingleton(() => LogoutUseCase(getIt<AuthRepository>()));
+  getIt.registerLazySingleton(() => GetCurrentUserUseCase(getIt<AuthRepository>()));
   
   getIt.registerLazySingleton(() => GetAppointmentsUseCase(getIt<AppointmentsRepository>()));
   getIt.registerLazySingleton(() => AddAppointmentUseCase(getIt<AppointmentsRepository>()));
@@ -125,6 +156,7 @@ Future<void> init() async {
     loginUseCase: getIt<LoginUseCase>(),
     registerUseCase: getIt<RegisterUseCase>(),
     logoutUseCase: getIt<LogoutUseCase>(),
+    getCurrentUserUseCase: getIt<GetCurrentUserUseCase>(),
   ));
   getIt.registerFactory(() => AppointmentsBloc(
     getAppointmentsUseCase: getIt<GetAppointmentsUseCase>(),

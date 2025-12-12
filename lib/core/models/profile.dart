@@ -52,6 +52,39 @@ class Profile {
       avatarUrl: avatarUrl ?? this.avatarUrl,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'position': position,
+      'experience': experience,
+      'clientsCount': clientsCount,
+      'rating': rating,
+      'specialties': specialties,
+      'phone': phone,
+      'email': email,
+      'schedule': schedule,
+      'avatarUrl': avatarUrl,
+    };
+  }
+
+  factory Profile.fromJson(Map<String, dynamic> json) {
+    return Profile(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      position: json['position'] as String,
+      experience: json['experience'] as String,
+      clientsCount: json['clientsCount'] as String,
+      rating: json['rating'] as String,
+      specialties: List<String>.from(json['specialties'] as List),
+      phone: json['phone'] as String,
+      email: json['email'] as String,
+      schedule: json['schedule'] as String,
+      avatarUrl: json['avatarUrl'] as String?,
+    );
+  }
 }
+
 
 

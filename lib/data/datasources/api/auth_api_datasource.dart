@@ -18,14 +18,14 @@ class AuthApiDataSourceImpl implements AuthApiDataSource {
     await Future.delayed(const Duration(milliseconds: 1000));
     
     if (email.isEmpty || password.isEmpty) {
-      return Either.left(const ValidationFailure('Заполните все поля'));
+      return left(const ValidationFailure('Заполните все поля'));
     }
 
     final dto = AuthDto(email: email, password: password);
     final user = AuthMapper.toDomain(dto);
     _currentUser = user;
     
-    return Either.right(user);
+    return right(user);
   }
 
   @override
@@ -33,27 +33,28 @@ class AuthApiDataSourceImpl implements AuthApiDataSource {
     await Future.delayed(const Duration(milliseconds: 1000));
     
     if (email.isEmpty || password.isEmpty) {
-      return Either.left(const ValidationFailure('Заполните все поля'));
+      return left(const ValidationFailure('Заполните все поля'));
     }
     
     if (password.length < 6) {
-      return Either.left(const ValidationFailure('Пароль должен содержать минимум 6 символов'));
+      return left(const ValidationFailure('Пароль должен содержать минимум 6 символов'));
     }
 
     final dto = AuthDto(email: email, password: password);
     final user = AuthMapper.toDomain(dto);
     _currentUser = user;
     
-    return Either.right(user);
+    return right(user);
   }
 
   @override
   Future<Either<Failure, void>> logout() async {
     _currentUser = null;
-    return Either.right(null);
+    return right(null);
   }
 
   User? getCurrentUser() => _currentUser;
 }
+
 
 

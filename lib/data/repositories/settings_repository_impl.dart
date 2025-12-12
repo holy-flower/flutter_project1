@@ -2,22 +2,23 @@ import '../../domain/repositories/settings_repository.dart';
 import '../../core/models/app_settings.dart';
 import '../../core/errors/failures.dart';
 import '../../core/utils/either.dart';
-import '../datasources/api/settings_api_datasource.dart';
+import '../datasources/local/settings_local_datasource.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {
-  final SettingsApiDataSource dataSource;
+  final SettingsLocalDataSource localDataSource;
 
-  SettingsRepositoryImpl(this.dataSource);
+  SettingsRepositoryImpl(this.localDataSource);
 
   @override
   Future<Either<Failure, AppSettings>> getSettings() async {
-    return await dataSource.getSettings();
+    return await localDataSource.getSettings();
   }
 
   @override
   Future<Either<Failure, AppSettings>> updateSettings(AppSettings settings) async {
-    return await dataSource.updateSettings(settings);
+    return await localDataSource.saveSettings(settings);
   }
 }
+
 
 

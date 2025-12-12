@@ -150,13 +150,13 @@ class ServicesApiDataSourceImpl implements ServicesApiDataSource {
   @override
   Future<Either<Failure, List<ServiceCategory>>> getServiceCategories() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return Either.right(List.from(_categories));
+    return right(List.from(_categories));
   }
 
   @override
   Future<Either<Failure, List<Service>>> getServicesByType(ServiceType type) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return Either.right(List.from(_services[type] ?? []));
+    return right(List.from(_services[type] ?? []));
   }
 
   @override
@@ -165,7 +165,7 @@ class ServicesApiDataSourceImpl implements ServicesApiDataSource {
       _services[service.type] = [];
     }
     _services[service.type]!.add(service);
-    return Either.right(service);
+    return right(service);
   }
 
   @override
@@ -173,7 +173,7 @@ class ServicesApiDataSourceImpl implements ServicesApiDataSource {
     for (var services in _services.values) {
       services.removeWhere((s) => s.id == serviceId);
     }
-    return Either.right(null);
+    return right(null);
   }
 }
 

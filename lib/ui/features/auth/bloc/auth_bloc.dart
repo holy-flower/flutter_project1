@@ -4,6 +4,7 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../domain/usecases/auth/login_usecase.dart';
 import '../../../../domain/usecases/auth/register_usecase.dart';
 import '../../../../domain/usecases/auth/logout_usecase.dart';
+import '../../../../domain/usecases/auth/get_current_user_usecase.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -12,18 +13,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase loginUseCase;
   final RegisterUseCase registerUseCase;
   final LogoutUseCase logoutUseCase;
+  final GetCurrentUserUseCase getCurrentUserUseCase;
 
   AuthBloc({
     LoginUseCase? loginUseCase,
     RegisterUseCase? registerUseCase,
     LogoutUseCase? logoutUseCase,
+    GetCurrentUserUseCase? getCurrentUserUseCase,
   })  : loginUseCase = loginUseCase ?? getIt<LoginUseCase>(),
         registerUseCase = registerUseCase ?? getIt<RegisterUseCase>(),
         logoutUseCase = logoutUseCase ?? getIt<LogoutUseCase>(),
+        getCurrentUserUseCase = getCurrentUserUseCase ?? getIt<GetCurrentUserUseCase>(),
         super(AuthInitial()) {
     on<LoginRequested>(_onLoginRequested);
     on<LogoutRequested>(_onLogoutRequested);
     on<RegisterRequested>(_onRegisterRequested);
+    on<CheckAuthStatus>(_onCheckAuthStatus);
   }
 
   void _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
@@ -60,6 +65,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) => emit(AuthError(failure.message)),
       (_) => emit(AuthUnauthenticated()),
+    );
+  }
+
+  void _onCheckAuthStatus(CheckAuthStatus event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    
+    final result = await getCurrentUserUseCase();
+    
+    result.fold(
+      (failure) => emit(AuthUnauthenticated()),
+      (user) {
+        if (user != null) {
+          emit(AuthAuthenticated(
+            email: user.email,
+            username: user.username ?? user.email.split('@').first,
+          ));
+        } else {
+          emit(AuthUnauthenticated());
+        }
+      },
     );
   }
 }

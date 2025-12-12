@@ -10,10 +10,11 @@ class AddInventoryItemUseCase {
 
   Future<Either<Failure, InventoryItem>> call(InventoryItem item) async {
     if (item.name.isEmpty) {
-      return Either.left(const ValidationFailure('Название товара не может быть пустым'));
+      return left(const ValidationFailure('Название товара не может быть пустым'));
     }
     return await repository.addInventoryItem(item);
   }
 }
+
 
 

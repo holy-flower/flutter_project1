@@ -34,3 +34,6 @@ class HairRemovalError extends HairRemovalState {
 }
 
 
+
+
+

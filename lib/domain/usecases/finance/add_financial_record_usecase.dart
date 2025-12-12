@@ -10,13 +10,14 @@ class AddFinancialRecordUseCase {
 
   Future<Either<Failure, FinancialRecord>> call(FinancialRecord record) async {
     if (record.service.isEmpty) {
-      return Either.left(const ValidationFailure('Название услуги не может быть пустым'));
+      return left(const ValidationFailure('Название услуги не может быть пустым'));
     }
     if (record.amount <= 0) {
-      return Either.left(const ValidationFailure('Сумма должна быть больше нуля'));
+      return left(const ValidationFailure('Сумма должна быть больше нуля'));
     }
     return await repository.addFinancialRecord(record);
   }
 }
+
 
 

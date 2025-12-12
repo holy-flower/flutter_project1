@@ -10,10 +10,11 @@ class UpdateProfileUseCase {
 
   Future<Either<Failure, Profile>> call(Profile profile) async {
     if (profile.name.isEmpty) {
-      return Either.left(const ValidationFailure('Имя не может быть пустым'));
+      return left(const ValidationFailure('Имя не может быть пустым'));
     }
     return await repository.updateProfile(profile);
   }
 }
+
 
 

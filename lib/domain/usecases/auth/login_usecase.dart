@@ -12,10 +12,11 @@ class LoginUseCase {
 
   Future<Either<Failure, User>> call(String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
-      return Either.left(const ValidationFailure('Заполните все поля'));
+      return left(const ValidationFailure('Заполните все поля'));
     }
     return await repository.login(email, password);
   }
 }
+
 
 

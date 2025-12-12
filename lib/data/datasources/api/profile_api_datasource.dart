@@ -35,14 +35,15 @@ class ProfileApiDataSourceImpl implements ProfileApiDataSource {
       );
     }
     
-    return Either.right(_profile!);
+    return right(_profile!);
   }
 
   @override
   Future<Either<Failure, Profile>> updateProfile(Profile profile) async {
     _profile = profile;
-    return Either.right(profile);
+    return right(profile);
   }
 }
+
 
 

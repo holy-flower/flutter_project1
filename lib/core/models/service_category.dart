@@ -36,6 +36,31 @@ class ServiceCategory {
       isPopular: isPopular ?? this.isPopular,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'route': route,
+      'description': description,
+      'serviceCount': serviceCount,
+      'totalPrice': totalPrice,
+      'isPopular': isPopular,
+    };
+  }
+
+  factory ServiceCategory.fromJson(Map<String, dynamic> json) {
+    return ServiceCategory(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      route: json['route'] as String,
+      description: json['description'] as String,
+      serviceCount: json['serviceCount'] as int,
+      totalPrice: json['totalPrice'] as int,
+      isPopular: json['isPopular'] as bool,
+    );
+  }
 }
+
 
 

@@ -37,3 +37,6 @@ class SelectHairRemovalService extends HairRemovalEvent {
 }
 
 
+
+
+

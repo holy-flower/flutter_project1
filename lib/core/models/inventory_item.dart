@@ -63,6 +63,37 @@ class InventoryItem {
       expiryDate: DateTime.now().add(const Duration(days: 365)),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'category': category,
+      'currentStock': currentStock,
+      'minStock': minStock,
+      'unit': unit,
+      'cost': cost,
+      'supplier': supplier,
+      'lastRestock': lastRestock.toIso8601String(),
+      'expiryDate': expiryDate.toIso8601String(),
+    };
+  }
+
+  factory InventoryItem.fromJson(Map<String, dynamic> json) {
+    return InventoryItem(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      category: json['category'] as String,
+      currentStock: json['currentStock'] as int,
+      minStock: json['minStock'] as int,
+      unit: json['unit'] as String,
+      cost: json['cost'] as int,
+      supplier: json['supplier'] as String,
+      lastRestock: DateTime.parse(json['lastRestock'] as String),
+      expiryDate: DateTime.parse(json['expiryDate'] as String),
+    );
+  }
 }
+
 
 

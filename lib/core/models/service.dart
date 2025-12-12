@@ -10,12 +10,12 @@ class Service extends Equatable {
   final String? details;
   final List<String>? effects;
   final List<String>? features;
-  final List<String>? zones; // для hair_removal
-  final List<String>? techniques; // для massage
-  final List<String>? benefits; // для massage
-  final List<String>? includes; // для spa
-  final String? indication; // для massage
-  final Color? color; // для hair_removal и spa
+  final List<String>? zones;
+  final List<String>? techniques;
+  final List<String>? benefits;
+  final List<String>? includes;
+  final String? indication;
+  final Color? color;
   final ServiceType type;
 
   const Service({
@@ -90,6 +90,49 @@ class Service extends Equatable {
     color,
     type,
   ];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'duration': duration,
+      'price': price,
+      'description': description,
+      'details': details,
+      'effects': effects,
+      'features': features,
+      'zones': zones,
+      'techniques': techniques,
+      'benefits': benefits,
+      'includes': includes,
+      'indication': indication,
+      'colorValue': color?.value,
+      'type': type.name,
+    };
+  }
+
+  factory Service.fromJson(Map<String, dynamic> json) {
+    return Service(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      duration: json['duration'] as String,
+      price: json['price'] as String,
+      description: json['description'] as String,
+      details: json['details'] as String?,
+      effects: json['effects'] != null ? List<String>.from(json['effects'] as List) : null,
+      features: json['features'] != null ? List<String>.from(json['features'] as List) : null,
+      zones: json['zones'] != null ? List<String>.from(json['zones'] as List) : null,
+      techniques: json['techniques'] != null ? List<String>.from(json['techniques'] as List) : null,
+      benefits: json['benefits'] != null ? List<String>.from(json['benefits'] as List) : null,
+      includes: json['includes'] != null ? List<String>.from(json['includes'] as List) : null,
+      indication: json['indication'] as String?,
+      color: json['colorValue'] != null ? Color(json['colorValue'] as int) : null,
+      type: ServiceType.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => ServiceType.facialCare,
+      ),
+    );
+  }
 }
 
 enum ServiceType {

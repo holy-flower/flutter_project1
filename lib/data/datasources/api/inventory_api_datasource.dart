@@ -15,30 +15,31 @@ class InventoryApiDataSourceImpl implements InventoryApiDataSource {
   @override
   Future<Either<Failure, List<InventoryItem>>> getInventoryItems() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return Either.right(List.from(_items));
+    return right(List.from(_items));
   }
 
   @override
   Future<Either<Failure, InventoryItem>> addInventoryItem(InventoryItem item) async {
     _items.add(item);
-    return Either.right(item);
+    return right(item);
   }
 
   @override
   Future<Either<Failure, InventoryItem>> updateInventoryItem(InventoryItem item) async {
     final index = _items.indexWhere((i) => i.id == item.id);
     if (index == -1) {
-      return Either.left(const ServerFailure('Товар не найден'));
+      return left(const ServerFailure('Товар не найден'));
     }
     _items[index] = item;
-    return Either.right(item);
+    return right(item);
   }
 
   @override
   Future<Either<Failure, void>> deleteInventoryItem(String itemId) async {
     _items.removeWhere((i) => i.id == itemId);
-    return Either.right(null);
+    return right(null);
   }
 }
+
 
 

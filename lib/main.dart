@@ -46,7 +46,7 @@ class CosmetologyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (context) => di.getIt<AuthBloc>(),
+          create: (context) => di.getIt<AuthBloc>()..add(CheckAuthStatus()),
         ),
         BlocProvider<AppointmentsBloc>(
           create: (context) => di.getIt<AppointmentsBloc>()..add(LoadAppointments()),
@@ -82,18 +82,36 @@ class CosmetologyApp extends StatelessWidget {
           create: (context) => di.getIt<SpaBloc>()..add(LoadSpaServices()),
         ),
       ],
-      child: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (context, state) {
-          final isDarkTheme = state is SettingsLoaded ? state.settings.isDarkTheme : false;
-
-          return MaterialApp.router(
-            title: 'Салон Красоты "BeautyClinic"',
-            theme: _buildLightTheme(),
-            darkTheme: _buildDarkTheme(),
-            themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
-            routerConfig: _router,
-          );
+      child: BlocListener<AuthBloc, AuthState>(
+        listenWhen: (previous, current) {
+          return current is AuthAuthenticated || current is AuthUnauthenticated;
         },
+        listener: (context, state) {
+          if (state is AuthAuthenticated) {
+            final currentPath = GoRouterState.of(context).uri.path;
+            if (currentPath == '/auth') {
+              Future.microtask(() => context.go('/services'));
+            }
+          } else if (state is AuthUnauthenticated) {
+            final currentPath = GoRouterState.of(context).uri.path;
+            if (currentPath != '/auth') {
+              Future.microtask(() => context.go('/auth'));
+            }
+          }
+        },
+        child: BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (context, state) {
+            final isDarkTheme = state is SettingsLoaded ? state.settings.isDarkTheme : false;
+
+            return MaterialApp.router(
+              title: 'Салон Красоты "BeautyClinic"',
+              theme: _buildLightTheme(),
+              darkTheme: _buildDarkTheme(),
+              themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+              routerConfig: _router,
+            );
+          },
+        ),
       ),
     );
   }

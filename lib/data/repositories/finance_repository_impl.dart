@@ -2,27 +2,28 @@ import '../../domain/repositories/finance_repository.dart';
 import '../../core/models/financial_record.dart';
 import '../../core/errors/failures.dart';
 import '../../core/utils/either.dart';
-import '../datasources/api/finance_api_datasource.dart';
+import '../datasources/local/finance_local_datasource.dart';
 
 class FinanceRepositoryImpl implements FinanceRepository {
-  final FinanceApiDataSource dataSource;
+  final FinanceLocalDataSource localDataSource;
 
-  FinanceRepositoryImpl(this.dataSource);
+  FinanceRepositoryImpl(this.localDataSource);
 
   @override
   Future<Either<Failure, Map<String, List<FinancialRecord>>>> getFinancialData() async {
-    return await dataSource.getFinancialData();
+    return await localDataSource.getFinancialData();
   }
 
   @override
   Future<Either<Failure, FinancialRecord>> addFinancialRecord(FinancialRecord record) async {
-    return await dataSource.addFinancialRecord(record);
+    return await localDataSource.addFinancialRecord(record);
   }
 
   @override
   Future<Either<Failure, void>> deleteFinancialRecord(String recordId) async {
-    return await dataSource.deleteFinancialRecord(recordId);
+    return await localDataSource.deleteFinancialRecord(recordId);
   }
 }
+
 
 

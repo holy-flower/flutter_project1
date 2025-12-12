@@ -1,5 +1,3 @@
-
-
 import 'package:flutter_project1/core/errors/failures.dart';
 import 'package:flutter_project1/core/models/financial_record.dart';
 import 'package:flutter_project1/core/utils/either.dart';
@@ -14,5 +12,8 @@ class GetFinancialDataUseCase {
     return await repository.getFinancialData();
   }
 }
+
+
+
 
 

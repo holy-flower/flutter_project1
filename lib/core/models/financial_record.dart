@@ -50,6 +50,34 @@ class FinancialRecord {
       type: FinancialType.income,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'date': date.toIso8601String(),
+      'service': service,
+      'amount': amount,
+      'client': client,
+      'description': description,
+      'type': type.name,
+    };
+  }
+
+  factory FinancialRecord.fromJson(Map<String, dynamic> json) {
+    return FinancialRecord(
+      id: json['id'] as String,
+      date: DateTime.parse(json['date'] as String),
+      service: json['service'] as String,
+      amount: json['amount'] as int,
+      client: json['client'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      type: FinancialType.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => FinancialType.income,
+      ),
+    );
+  }
 }
+
 
 

@@ -17,30 +17,31 @@ class AppointmentsApiDataSourceImpl implements AppointmentsApiDataSource {
   @override
   Future<Either<Failure, List<Appointment>>> getAppointments() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return Either.right(List.from(_appointments));
+    return right(List.from(_appointments));
   }
 
   @override
   Future<Either<Failure, Appointment>> addAppointment(Appointment appointment) async {
     _appointments.add(appointment);
-    return Either.right(appointment);
+    return right(appointment);
   }
 
   @override
   Future<Either<Failure, Appointment>> updateAppointment(Appointment appointment) async {
     final index = _appointments.indexWhere((a) => a.id == appointment.id);
     if (index == -1) {
-      return Either.left(const ServerFailure('Запись не найдена'));
+      return left(const ServerFailure('Запись не найдена'));
     }
     _appointments[index] = appointment;
-    return Either.right(appointment);
+    return right(appointment);
   }
 
   @override
   Future<Either<Failure, void>> deleteAppointment(String appointmentId) async {
     _appointments.removeWhere((a) => a.id == appointmentId);
-    return Either.right(null);
+    return right(null);
   }
 }
+
 
 

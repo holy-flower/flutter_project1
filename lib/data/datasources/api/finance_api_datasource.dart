@@ -43,7 +43,7 @@ class FinanceApiDataSourceImpl implements FinanceApiDataSource {
   @override
   Future<Either<Failure, Map<String, List<FinancialRecord>>>> getFinancialData() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return Either.right(Map.from(_financialData));
+    return right(Map.from(_financialData));
   }
 
   @override
@@ -53,7 +53,7 @@ class FinanceApiDataSourceImpl implements FinanceApiDataSource {
       _financialData[period] = [];
     }
     _financialData[period]!.add(record);
-    return Either.right(record);
+    return right(record);
   }
 
   @override
@@ -61,7 +61,7 @@ class FinanceApiDataSourceImpl implements FinanceApiDataSource {
     for (var period in _financialData.keys) {
       _financialData[period]!.removeWhere((r) => r.id == recordId);
     }
-    return Either.right(null);
+    return right(null);
   }
 
   String _getPeriod(DateTime date) {
@@ -72,5 +72,6 @@ class FinanceApiDataSourceImpl implements FinanceApiDataSource {
     return 'year';
   }
 }
+
 
 

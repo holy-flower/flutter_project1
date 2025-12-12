@@ -25,14 +25,15 @@ class SettingsApiDataSourceImpl implements SettingsApiDataSource {
       );
     }
     
-    return Either.right(_settings!);
+    return right(_settings!);
   }
 
   @override
   Future<Either<Failure, AppSettings>> updateSettings(AppSettings settings) async {
     _settings = settings;
-    return Either.right(settings);
+    return right(settings);
   }
 }
+
 
 

@@ -32,6 +32,29 @@ class AppSettings {
       lastUpdated: lastUpdated ?? this.lastUpdated,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'isDarkTheme': isDarkTheme,
+      'notificationsEnabled': notificationsEnabled,
+      'biometricAuth': biometricAuth,
+      'language': language,
+      'appVersion': appVersion,
+      'lastUpdated': lastUpdated.toIso8601String(),
+    };
+  }
+
+  factory AppSettings.fromJson(Map<String, dynamic> json) {
+    return AppSettings(
+      isDarkTheme: json['isDarkTheme'] as bool,
+      notificationsEnabled: json['notificationsEnabled'] as bool,
+      biometricAuth: json['biometricAuth'] as bool,
+      language: json['language'] as String,
+      appVersion: json['appVersion'] as String,
+      lastUpdated: DateTime.parse(json['lastUpdated'] as String),
+    );
+  }
 }
+
 
 

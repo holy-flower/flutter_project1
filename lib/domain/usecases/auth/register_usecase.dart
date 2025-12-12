@@ -10,13 +10,14 @@ class RegisterUseCase {
 
   Future<Either<Failure, User>> call(String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
-      return Either.left(const ValidationFailure('Заполните все поля'));
+      return left(const ValidationFailure('Заполните все поля'));
     }
     if (password.length < 6) {
-      return Either.left(const ValidationFailure('Пароль должен содержать минимум 6 символов'));
+      return left(const ValidationFailure('Пароль должен содержать минимум 6 символов'));
     }
     return await repository.register(email, password);
   }
 }
+
 
 

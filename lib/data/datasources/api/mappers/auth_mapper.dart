@@ -13,9 +13,12 @@ class AuthMapper {
   static AuthDto toDto(User user) {
     return AuthDto(
       email: user.email,
-      password: '', // Password is not stored in User model
+      password: '',
     );
   }
 }
+
+
+
 
 
