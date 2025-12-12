@@ -9,6 +9,8 @@ import '../../data/datasources/local/appointments_local_datasource.dart';
 import '../../data/datasources/local/inventory_local_datasource.dart';
 import '../../data/datasources/local/finance_local_datasource.dart';
 import '../../data/datasources/local/services_local_datasource.dart';
+import '../../data/datasources/remote/beauty_products_remote_datasource.dart';
+import '../../data/datasources/remote/cosmetology_news_remote_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/repositories/appointments_repository_impl.dart';
 import '../../data/repositories/finance_repository_impl.dart';
@@ -16,6 +18,8 @@ import '../../data/repositories/inventory_repository_impl.dart';
 import '../../data/repositories/profile_repository_impl.dart';
 import '../../data/repositories/settings_repository_impl.dart';
 import '../../data/repositories/services_repository_impl.dart';
+import '../../data/repositories/beauty_products_repository_impl.dart';
+import '../../data/repositories/cosmetology_news_repository_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/repositories/appointments_repository.dart';
 import '../../domain/repositories/finance_repository.dart';
@@ -23,6 +27,8 @@ import '../../domain/repositories/inventory_repository.dart';
 import '../../domain/repositories/profile_repository.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../../domain/repositories/services_repository.dart';
+import '../../domain/repositories/beauty_products_repository.dart';
+import '../../domain/repositories/cosmetology_news_repository.dart';
 import '../../domain/usecases/auth/login_usecase.dart';
 import '../../domain/usecases/auth/register_usecase.dart';
 import '../../domain/usecases/auth/logout_usecase.dart';
@@ -46,6 +52,16 @@ import '../../domain/usecases/services/get_service_categories_usecase.dart';
 import '../../domain/usecases/services/get_services_by_type_usecase.dart';
 import '../../domain/usecases/services/add_service_usecase.dart';
 import '../../domain/usecases/services/delete_service_usecase.dart';
+import '../../domain/usecases/beauty_products/get_product_by_barcode_usecase.dart';
+import '../../domain/usecases/beauty_products/search_products_usecase.dart';
+import '../../domain/usecases/beauty_products/get_product_ingredients_usecase.dart';
+import '../../domain/usecases/beauty_products/search_products_by_ingredient_usecase.dart';
+import '../../domain/usecases/beauty_products/get_product_rating_usecase.dart';
+import '../../domain/usecases/cosmetology_news/search_cosmetology_news_usecase.dart';
+import '../../domain/usecases/cosmetology_news/get_skincare_news_usecase.dart';
+import '../../domain/usecases/cosmetology_news/get_top_beauty_news_usecase.dart';
+import '../../domain/usecases/cosmetology_news/get_cosmetics_news_by_date_usecase.dart';
+import '../../domain/usecases/cosmetology_news/get_health_news_sources_usecase.dart';
 import '../../ui/features/auth/bloc/auth_bloc.dart';
 import '../../ui/features/appointments/bloc/appointments_bloc.dart';
 import '../../ui/features/profile/bloc/profile_bloc.dart';
@@ -58,6 +74,8 @@ import '../../ui/features/body_care/bloc/body_care_bloc.dart';
 import '../../ui/features/hair_removal/bloc/hair_removal_bloc.dart';
 import '../../ui/features/massage/bloc/massage_bloc.dart';
 import '../../ui/features/spa/bloc/spa_bloc.dart';
+import '../../ui/features/beauty_products/bloc/beauty_products_bloc.dart';
+import '../../ui/features/cosmetology_news/bloc/cosmetology_news_bloc.dart';
 
 import '../../data/datasources/local/shared_preferences_service.dart';
 
@@ -94,6 +112,14 @@ Future<void> init() async {
   getIt.registerLazySingleton<AuthApiDataSource>(() => AuthApiDataSourceImpl());
   getIt.registerLazySingleton<ProfileApiDataSource>(() => ProfileApiDataSourceImpl());
 
+  // Remote Data Sources
+  getIt.registerLazySingleton<BeautyProductsRemoteDataSource>(
+    () => BeautyProductsRemoteDataSourceImpl(),
+  );
+  getIt.registerLazySingleton<CosmetologyNewsRemoteDataSource>(
+    () => CosmetologyNewsRemoteDataSourceImpl(),
+  );
+
   // Repositories
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -118,6 +144,12 @@ Future<void> init() async {
   );
   getIt.registerLazySingleton<ServicesRepository>(
     () => ServicesRepositoryImpl(getIt<ServicesLocalDataSource>()),
+  );
+  getIt.registerLazySingleton<BeautyProductsRepository>(
+    () => BeautyProductsRepositoryImpl(getIt<BeautyProductsRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton<CosmetologyNewsRepository>(
+    () => CosmetologyNewsRepositoryImpl(getIt<CosmetologyNewsRemoteDataSource>()),
   );
 
   // Use Cases
@@ -150,6 +182,20 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => GetServicesByTypeUseCase(getIt<ServicesRepository>()));
   getIt.registerLazySingleton(() => AddServiceUseCase(getIt<ServicesRepository>()));
   getIt.registerLazySingleton(() => DeleteServiceUseCase(getIt<ServicesRepository>()));
+
+  // Beauty Products Use Cases
+  getIt.registerLazySingleton(() => GetProductByBarcodeUseCase(getIt<BeautyProductsRepository>()));
+  getIt.registerLazySingleton(() => SearchProductsUseCase(getIt<BeautyProductsRepository>()));
+  getIt.registerLazySingleton(() => GetProductIngredientsUseCase(getIt<BeautyProductsRepository>()));
+  getIt.registerLazySingleton(() => SearchProductsByIngredientUseCase(getIt<BeautyProductsRepository>()));
+  getIt.registerLazySingleton(() => GetProductRatingUseCase(getIt<BeautyProductsRepository>()));
+
+  // Cosmetology News Use Cases
+  getIt.registerLazySingleton(() => SearchCosmetologyNewsUseCase(getIt<CosmetologyNewsRepository>()));
+  getIt.registerLazySingleton(() => GetSkincareNewsUseCase(getIt<CosmetologyNewsRepository>()));
+  getIt.registerLazySingleton(() => GetTopBeautyNewsUseCase(getIt<CosmetologyNewsRepository>()));
+  getIt.registerLazySingleton(() => GetCosmeticsNewsByDateUseCase(getIt<CosmetologyNewsRepository>()));
+  getIt.registerLazySingleton(() => GetHealthNewsSourcesUseCase(getIt<CosmetologyNewsRepository>()));
 
   // BLoCs
   getIt.registerFactory(() => AuthBloc(
@@ -211,6 +257,20 @@ Future<void> init() async {
     getServicesByTypeUseCase: getIt<GetServicesByTypeUseCase>(),
     addServiceUseCase: getIt<AddServiceUseCase>(),
     deleteServiceUseCase: getIt<DeleteServiceUseCase>(),
+  ));
+  getIt.registerFactory(() => BeautyProductsBloc(
+    getProductByBarcodeUseCase: getIt<GetProductByBarcodeUseCase>(),
+    searchProductsUseCase: getIt<SearchProductsUseCase>(),
+    getProductIngredientsUseCase: getIt<GetProductIngredientsUseCase>(),
+    searchProductsByIngredientUseCase: getIt<SearchProductsByIngredientUseCase>(),
+    getProductRatingUseCase: getIt<GetProductRatingUseCase>(),
+  ));
+  getIt.registerFactory(() => CosmetologyNewsBloc(
+    searchCosmetologyNewsUseCase: getIt<SearchCosmetologyNewsUseCase>(),
+    getSkincareNewsUseCase: getIt<GetSkincareNewsUseCase>(),
+    getTopBeautyNewsUseCase: getIt<GetTopBeautyNewsUseCase>(),
+    getCosmeticsNewsByDateUseCase: getIt<GetCosmeticsNewsByDateUseCase>(),
+    getHealthNewsSourcesUseCase: getIt<GetHealthNewsSourcesUseCase>(),
   ));
 }
 

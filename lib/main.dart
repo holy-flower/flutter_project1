@@ -31,6 +31,8 @@ import 'ui/features/body_care/bloc/body_care_bloc.dart';
 import 'ui/features/hair_removal/bloc/hair_removal_bloc.dart';
 import 'ui/features/massage/bloc/massage_bloc.dart';
 import 'ui/features/spa/bloc/spa_bloc.dart';
+import 'ui/features/beauty_products/screens/products_search_screen.dart';
+import 'ui/features/cosmetology_news/screens/news_list_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -231,6 +233,18 @@ final GoRouter _router = GoRouter(
             child: SpaScreen(),
           ),
         ),
+        GoRoute(
+          path: '/beauty_products',
+          pageBuilder: (context, state) => const MaterialPage(
+            child: ProductsSearchScreen(),
+          ),
+        ),
+        GoRoute(
+          path: '/cosmetology_news',
+          pageBuilder: (context, state) => const MaterialPage(
+            child: NewsListScreen(),
+          ),
+        ),
 
         GoRoute(
           path: '/add_facial_service',
@@ -302,6 +316,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         location.startsWith('/hair_removal') ||
         location.startsWith('/massage') ||
         location.startsWith('/spa') ||
+        location.startsWith('/beauty_products') ||
+        location.startsWith('/cosmetology_news') ||
         location.startsWith('/add_')) {
       return 1;
     }
@@ -339,6 +355,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       return 'Массаж';
     } else if (location.startsWith('/spa') || location == '/add_spa_service') {
       return 'SPA-программы';
+    } else if (location.startsWith('/beauty_products')) {
+      return 'Поиск продуктов';
+    } else if (location.startsWith('/cosmetology_news')) {
+      return 'Новости косметологии';
     } else if (location.startsWith('/inventory')) {
       return 'Склад и материалы';
     } else if (location.startsWith('/finance')) {
